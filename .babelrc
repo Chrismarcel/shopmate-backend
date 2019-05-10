@@ -1,0 +1,4 @@
+// Site-wide Babel configuration
+{
+  "presets": ["@babel/preset-env"]
+}
