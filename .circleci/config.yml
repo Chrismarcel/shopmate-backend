@@ -42,15 +42,11 @@ jobs:
             echo Failed waiting for MySQL && exit 1
 
       - run:
-          name: Install MySQL CLI
-          command: |
-            sudo apt-get install mysql-client
-
-      - run:
           name: Install demo database
           command: |
-            mysql -h 127.0.0.1 -u root -pshopmate5000 shopmate5000 < server/database/sql-data/shopmate.sql
-            mysql -h 127.0.0.1 -u root -pshopmate5000 --execute="SELECT * FROM shopmate.category"
+            sudo apt-get install mysql-client
+            mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWORD $DB_NAME < server/database/sql-data/shopmate.sql
+            mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWORD $DB_NAME --execute="SELECT * FROM shopmate.category"
 
       # Download and cache dependencies
       - restore_cache:
