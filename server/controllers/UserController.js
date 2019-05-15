@@ -22,11 +22,13 @@ class UserController {
     const { name, email, password } = req;
     const hashedPassword = Utils.hashPassword(password);
     try {
-      const registerCustomerQuery = await dbQuery('CALL customer_add(?, ?, ?)',
-        [name, email, hashedPassword]);
+      const registerCustomerQuery = await dbQuery('CALL customer_add(?, ?, ?)', [
+        name,
+        email,
+        hashedPassword
+      ]);
       const userId = registerCustomerQuery[0][0]['LAST_INSERT_ID()'];
-      const customerDetails = await dbQuery('CALL customer_get_customer(?)',
-        userId);
+      const customerDetails = await dbQuery('CALL customer_get_customer(?)', userId);
       delete customerDetails[0][0].password;
       const accessToken = `Bearer ${Utils.generateToken({ email, name })}`;
       ResponseHandler.success({
@@ -36,6 +38,7 @@ class UserController {
       },
       res);
     } catch (error) {
+      console.log(error);
       return ResponseHandler.serverError(res);
     }
   }
