@@ -92,7 +92,6 @@ class ValidateUser {
       },
       res);
     } catch (error) {
-      console.log(error);
       return ResponseHandler.serverError(res);
     }
   }
@@ -108,7 +107,6 @@ class ValidateUser {
       const emailQuery = await dbQuery('CALL customer_get_login_info(?)', email);
       return emailQuery[0].length === 0;
     } catch (error) {
-      console.log(error);
       throw new Error(error);
     }
   }
