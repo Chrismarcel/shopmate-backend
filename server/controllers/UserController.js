@@ -27,7 +27,6 @@ class UserController {
         email,
         hashedPassword
       ]);
-      console.log('Hashed password is', hashedPassword);
       const userId = registerCustomerQuery[0][0]['LAST_INSERT_ID()'];
       const customerDetails = await dbQuery('CALL customer_get_customer(?)', userId);
       delete customerDetails[0][0].password;
@@ -39,7 +38,6 @@ class UserController {
       },
       res);
     } catch (error) {
-      console.log(error);
       return ResponseHandler.serverError(res);
     }
   }

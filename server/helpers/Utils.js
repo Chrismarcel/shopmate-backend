@@ -45,7 +45,7 @@ class HelperUtils {
    */
   static hashPassword(password) {
     const hashedPassword = crypto
-      .pbkdf2Sync(password, privateKey, 1000, 50, 'SHA512')
+      .pbkdf2Sync(password, privateKey, 10000, 5, 'SHA512')
       .toString('hex');
 
     return hashedPassword;

@@ -20,7 +20,7 @@ class ValidateUser {
         .exists()
         .withMessage('required')
         .isLength({ min: 2 })
-        .withMessage('The name is too short')
+        .withMessage('The length is too short name.')
         .isLength({ max: 100 })
         .withMessage('The length is too long name.')
         .exists()
