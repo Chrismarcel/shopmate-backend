@@ -49,6 +49,7 @@ jobs:
       - run:
           name: Install demo database
           command: |
+            mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWORD CREATE DATABASE shopmate
             mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWORD $DB_NAME < server/database/sql-data/shopmate.sql
             mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWORD $DB_NAME --execute="SELECT * FROM shopmate.category"
 
