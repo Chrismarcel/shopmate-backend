@@ -9,7 +9,9 @@ jobs:
       # specify the version you desire here
       - image: circleci/node:latest
         environment:
-          DB_HOST: localhost
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
           DB_USER: root
           DB_PASSWORD: ""
           DB_NAME: shopmate5000
@@ -47,8 +49,8 @@ jobs:
       - run:
           name: Install demo database
           command: |
-            mysql -h$DB_HOST -u$DB_USERNAME -p$DB_PASSWORD $DB_DATABASE < server/database/sql-data/shopmate.sql
-            mysql -h$DB_HOST -u$DB_USERNAME -p$DB_PASSWORD $DB_DATABASE --execute="SELECT * FROM shopmate.category"
+            mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWORD $DB_NAME < server/database/sql-data/shopmate.sql
+            mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWORD $DB_NAME --execute="SELECT * FROM shopmate.category"
 
       # Download and cache dependencies
       - restore_cache:
