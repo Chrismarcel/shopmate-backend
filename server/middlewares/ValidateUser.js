@@ -20,7 +20,7 @@ class ValidateUser {
         .exists()
         .withMessage('required')
         .isLength({ min: 2 })
-        .withMessage('The name is too short')
+        .withMessage('The length is too short name.')
         .isLength({ max: 100 })
         .withMessage('The length is too long name.')
         .exists()
@@ -104,8 +104,7 @@ class ValidateUser {
    */
   static async emailIsUnique(email) {
     try {
-      const emailQuery = await dbQuery('CALL customer_get_login_info(?)',
-        email);
+      const emailQuery = await dbQuery('CALL customer_get_login_info(?)', email);
       return emailQuery[0].length === 0;
     } catch (error) {
       throw new Error(error);

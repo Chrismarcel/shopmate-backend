@@ -9,9 +9,11 @@ jobs:
       # specify the version you desire here
       - image: circleci/node:latest
         environment:
-          DB_HOST: localhost
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
           DB_USER: root
-          DB_PASSWORD: ""
+          DB_PASSWORD: shopmate5000
           DB_NAME: shopmate
 
       # Specify service dependencies here if necessary
@@ -20,10 +22,8 @@ jobs:
       # - image: circleci/mongo:3.4.4
       - image: circleci/mysql:5.7
         environment:
-          DB_HOST: localhost
-          DB_USER: root
-          DB_PASSWORD: ""
-          DB_NAME: shopmate
+          MYSQL_ROOT_HOST: "%"
+          MYSQL_ROOT_PASSWORD: shopmate5000
 
     working_directory: ~/shopmate-backend
 
@@ -45,8 +45,13 @@ jobs:
           name: Install MySQL CLI
           command: |
             sudo apt-get install mysql-client
-            mysql -h 127.0.0.1 -u user -ppassw0rd shopmate < database/sql-data/shopmate.sql
-            mysql -h 127.0.0.1 -u user -ppassw0rd --execute="SELECT * FROM shopmate.category"
+
+      - run:
+          name: Install demo database
+          command: |
+            mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWORD -e "create database shopmate;"
+            mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWORD $DB_NAME < server/database/sql-data/shopmate.sql
+            mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWORD $DB_NAME --execute="SELECT * FROM shopmate.category"
 
       # Download and cache dependencies
       - restore_cache:
