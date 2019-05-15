@@ -45,7 +45,7 @@ jobs:
           name: Install MySQL CLI
           command: |
             sudo apt-get install mysql-client
-            mysql -h 127.0.0.1 -u user -ppassw0rd shopmate < database/sql-data/shopmate.sql
+            mysql -h 127.0.0.1 -u user -ppassw0rd shopmate < server/database/sql-data/shopmate.sql
             mysql -h 127.0.0.1 -u user -ppassw0rd --execute="SELECT * FROM shopmate.category"
 
       # Download and cache dependencies
