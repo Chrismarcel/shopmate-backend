@@ -49,7 +49,7 @@ jobs:
       - run:
           name: Install demo database
           command: |
-            mysql  -h 127.0.0.1 -u root -pshopmate5000 -e "create database shopmate;"
+            mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWORD -e "create database shopmate;"
             mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWORD $DB_NAME < server/database/sql-data/shopmate.sql
             mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWORD $DB_NAME --execute="SELECT * FROM shopmate.category"
 
