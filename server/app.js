@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import logger from 'morgan';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import routes from './routes';
 
 dotenv.config();
 
@@ -22,6 +23,8 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => res.status(200).send({
   message: 'Welcome to Shopmate'
 }));
+
+app.use('/', routes);
 
 // Return an error 404 for non-existent routes
 app.use((req, res) => {

@@ -8,16 +8,45 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/node:latest
+        environment:
+          DB_HOST: localhost
+          DB_USER: root
+          DB_PASSWORD: ""
+          DB_NAME: shopmate
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/mongo:3.4.4
+      - image: circleci/mysql:5.7
+        environment:
+          DB_HOST: localhost
+          DB_USER: root
+          DB_PASSWORD: ""
+          DB_NAME: shopmate
 
     working_directory: ~/shopmate-backend
 
     steps:
       - checkout
+
+      - run:
+          name: Waiting for MySQL to be ready
+          command: |
+            for i in `seq 1 30`;
+            do
+              nc -z 127.0.0.1 3306 && echo Success && exit 0
+              echo -n .
+              sleep 1
+            done
+            echo Failed waiting for MySQL && exit 1
+
+      - run:
+          name: Install MySQL CLI
+          command: |
+            sudo apt-get install mysql-client
+            mysql -h 127.0.0.1 -u user -ppassw0rd shopmate < database/sql-data/shopmate.sql
+            mysql -h 127.0.0.1 -u user -ppassw0rd --execute="SELECT * FROM shopmate.category"
 
       # Download and cache dependencies
       - restore_cache:
