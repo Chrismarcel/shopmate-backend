@@ -29,10 +29,41 @@ class UserController {
       ]);
       const userId = registerCustomerQuery[0][0]['LAST_INSERT_ID()'];
       const customerDetails = await dbQuery('CALL customer_get_customer(?)', userId);
-      delete customerDetails[0][0].password;
-      const accessToken = `Bearer ${Utils.generateToken({ email, name })}`;
+      const customerData = customerDetails[0][0];
+      delete customerData.password;
+      const accessToken = `Bearer ${Utils.generateToken({ userId, email, name })}`;
       ResponseHandler.success({
-        schema: customerDetails[0][0],
+        schema: customerData,
+        accessToken,
+        expires_in: '24h'
+      },
+      res);
+    } catch (error) {
+      return ResponseHandler.serverError(res);
+    }
+  }
+
+  /**
+   * @method login
+   * @description Controller to handle user login
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} - Response object
+   */
+  static async login(req, res) {
+    const { userId } = req;
+    try {
+      const customerDetails = await dbQuery('CALL customer_get_customer(?)', userId);
+      const customerData = customerDetails[0][0];
+      const { name, email } = customerData;
+      delete customerData.password;
+      const accessToken = `Bearer ${Utils.generateToken({
+        email,
+        userId,
+        name
+      })}`;
+      ResponseHandler.success({
+        schema: customerData,
         accessToken,
         expires_in: '24h'
       },

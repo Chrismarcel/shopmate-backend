@@ -4,9 +4,14 @@ import UserController from '../controllers/UserController';
 
 const customerRoute = express.Router();
 
-customerRoute.post('/customer',
-  ValidateUser.checkUserDetails(),
+customerRoute.post('/customers',
+  ValidateUser.validateRegistrationFields(),
   ValidateUser.registerUser,
   UserController.register);
+
+customerRoute.post('/customers/login',
+  ValidateUser.validateLoginFields(),
+  ValidateUser.loginUser,
+  UserController.login);
 
 export default customerRoute;
