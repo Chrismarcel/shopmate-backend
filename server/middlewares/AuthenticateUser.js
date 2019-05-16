@@ -17,7 +17,7 @@ class AuthenticateUser {
   static async verifyAuthHeader(req) {
     const { 'user-key': authorization } = req.headers;
     if (!authorization) {
-      return { error: 'auth' };
+      return { error: 'no_auth' };
     }
 
     const token = authorization.split(' ')[1];

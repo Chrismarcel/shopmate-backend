@@ -50,10 +50,7 @@ class ResponseHandler {
    */
   static unauthorized({ code, message, field }, res) {
     return res.status(401).json({
-      status: 401,
-      code,
-      message,
-      field
+      error: { status: 401, code, message, field }
     });
   }
 }

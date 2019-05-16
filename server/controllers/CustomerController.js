@@ -90,9 +90,7 @@ class CustomerController {
       const customerData = customerDetails[0][0];
       delete customerData.password;
 
-      ResponseHandler.success(customerData, res);
-
-      return ResponseHandler.success(customerDetails, res);
+      return ResponseHandler.success(customerData, res);
     } catch (error) {
       return ResponseHandler.serverError(res);
     }
