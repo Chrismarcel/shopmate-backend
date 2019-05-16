@@ -37,7 +37,23 @@ class ResponseHandler {
     return res.status(500).json({
       status: 500,
       code: 'SRV_01',
-      message: 'The server is currently unable to process this request.'
+      message: 'The server is currently unable to process this request.',
+      field: 'server'
+    });
+  }
+
+  /**
+   * @method success
+   * @description Returns success response object for successful requests
+   * @param {object} res - Express response object
+   * @returns {object} - Response object returned to user
+   */
+  static unauthorized({ code, message, field }, res) {
+    return res.status(401).json({
+      status: 401,
+      code,
+      message,
+      field
     });
   }
 }

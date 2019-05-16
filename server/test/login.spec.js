@@ -5,8 +5,8 @@ import app from '../app';
 
 chai.use(chaiHttp);
 
-describe('Test registration endpoint POST /customers/login', () => {
-  it('should return 200 if registration details are correct', (done) => {
+describe('Test login endpoint POST /customers/login', () => {
+  it('should return 200 if login details are correct', (done) => {
     chai
       .request(app)
       .post('/customers/login')
@@ -17,7 +17,7 @@ describe('Test registration endpoint POST /customers/login', () => {
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body).to.have.property('accessToken');
-        expect(res.body.schema).to.be.an('object');
+        expect(res.body.customer).to.be.an('object');
         expect(res.body.expires_in).to.equal('24h');
         done(err);
       });
@@ -58,7 +58,7 @@ describe('Test registration endpoint POST /customers/login', () => {
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
-        expect(error.code).to.equal('USR_03');
+        expect(error.code).to.equal('USR_07');
         expect(error.message).to.equal('The length is too long email');
         expect(error.field).to.equal('email');
         done(err);
@@ -70,8 +70,8 @@ describe('Test registration endpoint POST /customers/login', () => {
       .request(app)
       .post('/customers/login')
       .send({
-        email: 'user3@email.com',
-        password: 'password12345'
+        email: 'user1@email.com',
+        password: 'password1234567'
       })
       .end((err, res) => {
         const { error } = res.body;

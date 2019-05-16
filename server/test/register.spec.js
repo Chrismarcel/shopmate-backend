@@ -18,7 +18,7 @@ describe('Test registration endpoint POST /customers', () => {
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body).to.have.property('accessToken');
-        expect(res.body.schema).to.be.an('object');
+        expect(res.body.customer).to.be.an('object');
         expect(res.body.expires_in).to.equal('24h');
         done(err);
       });
@@ -59,7 +59,7 @@ describe('Test registration endpoint POST /customers', () => {
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
-        expect(error.code).to.equal('USR_03');
+        expect(error.code).to.equal('USR_07');
         expect(error.message).to.equal('The length is too long email');
         expect(error.field).to.equal('email');
         done(err);
@@ -74,7 +74,7 @@ describe('Test registration endpoint POST /customers', () => {
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
-        expect(error.code).to.equal('USR_03');
+        expect(error.code).to.equal('USR_07');
         expect(error.message).to.equal('The length is too short name.');
         expect(error.field).to.equal('name');
         done(err);
@@ -89,7 +89,7 @@ describe('Test registration endpoint POST /customers', () => {
       .end((err, res) => {
         expect(res.status).to.equal(400);
         const { error } = res.body;
-        expect(error.code).to.equal('USR_03');
+        expect(error.code).to.equal('USR_07');
         expect(error.message).to.equal('The length is too long name.');
         expect(error.field).to.equal('name');
         done(err);
