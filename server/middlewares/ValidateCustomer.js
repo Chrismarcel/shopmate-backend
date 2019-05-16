@@ -88,14 +88,20 @@ class ValidateUser {
   }
 
   /**
-   * @method profileUpdateDetails
+   * @method updateProfileDetails
    * @description Validates profile details provided by user during update
    * @param {object} req - The request object
    * @param {object} res - The response object
    * @param {callback} next - Callback method
    * @returns {object} - JSON response object
    */
-  static async profileUpdateDetails(req, res, next) {
+  static async updateProfileDetails(req, res, next) {
+    const fields = validationResult(req).mapped();
+    const errorObj = ValidateUser.validateUserFields(fields);
+    if (Object.keys(errorObj).length) {
+      return ResponseHandler.badRequest(errorObj, res);
+    }
+
     const { body, customerData } = req;
     const {
       customer_id: customerId,
@@ -121,11 +127,49 @@ class ValidateUser {
       Object.assign(body, { password: hashedPassword });
     }
     const updatedCustomerDetails = Object.assign(customerProfileData, body);
+    req.customerDetails = updatedCustomerDetails;
+    return next();
+  }
+
+  /**
+   * @method updateAddressDetails
+   * @description Validates profile details provided by user during update
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {callback} next - Callback method
+   * @returns {object} - JSON response object
+   */
+  static async updateAddressDetails(req, res, next) {
     const fields = validationResult(req).mapped();
-    const errorObj = ValidateUser.validateUserFields(fields);
+    const errorObj = ValidateUser.validateUserFields(fields, 'USR-09');
     if (Object.keys(errorObj).length) {
       return ResponseHandler.badRequest(errorObj, res);
     }
+
+    const { body, customerData } = req;
+    const {
+      customer_id: customerId,
+      address_1: address1,
+      address_2: address2,
+      city,
+      region,
+      country,
+      postal_code: postalCode,
+      shipping_region_id: shippingRegionId
+    } = customerData;
+
+    const customerAddressData = {
+      customer_id: customerId,
+      address_1: address1,
+      address_2: address2,
+      city,
+      region,
+      postal_code: postalCode,
+      country,
+      shipping_region_id: shippingRegionId
+    };
+
+    const updatedCustomerDetails = Object.assign(customerAddressData, body);
     req.customerDetails = updatedCustomerDetails;
     return next();
   }
@@ -149,9 +193,10 @@ class ValidateUser {
    * @method validateUserFields
    * @description Validates if user email is unique
    * @param {string} fields - Error fields
+   * @param {string} errorCode - Error code
    * @returns {boolean} - If user email is unique or not
    */
-  static validateUserFields(fields) {
+  static validateUserFields(fields, errorCode = 'USR_03') {
     // Cater for required fields errors, i.e if required field was omitted
     const requiredFieldsErrors = FieldValidation.validateRequiredFields(fields);
 
@@ -168,13 +213,11 @@ class ValidateUser {
 
     if (genericFieldErrors.length > 0) {
       const errorField = genericFieldErrors;
-      let code = 'USR_03';
-      if (fields[errorField].msg.includes('long') || fields[errorField].msg.includes('short')) {
-        code = 'USR_07';
-      }
+      const errorMessage = fields[errorField].msg;
+      const characterLengthError = errorMessage.includes('long') || errorMessage.includes('short');
       return {
-        code,
-        message: fields[errorField].msg,
+        code: characterLengthError ? 'USR_07' : errorCode,
+        message: errorMessage,
         field: errorField
       };
     }

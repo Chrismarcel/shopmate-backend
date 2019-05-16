@@ -79,11 +79,35 @@ class CustomerController {
    * @param {object} res - The response object
    * @returns {object} - Response object
    */
-  static async updateCustomerDetails(req, res) {
+  static async updateCustomerProfileDetails(req, res) {
     const { customerDetails: customerProfileDetails } = req;
     const queryParams = Object.values(customerProfileDetails);
     try {
       await dbQuery('CALL customer_update_account(?, ?, ?, ?, ?, ?, ?)', queryParams);
+      const customerId = queryParams[0];
+
+      const customerDetails = await dbQuery('CALL customer_get_customer(?)', customerId);
+      const customerData = customerDetails[0][0];
+      delete customerData.password;
+
+      return ResponseHandler.success(customerData, res);
+    } catch (error) {
+      return ResponseHandler.serverError(res);
+    }
+  }
+
+  /**
+   * @method updateCustomerAddressDetails
+   * @description Controller to update Customer address details
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} - Response object
+   */
+  static async updateCustomerAddressDetails(req, res) {
+    const { customerDetails: customerAddressDetails } = req;
+    const queryParams = Object.values(customerAddressDetails);
+    try {
+      await dbQuery('CALL customer_update_address(?, ?, ?, ?, ?, ?, ?, ?)', queryParams);
       const customerId = queryParams[0];
 
       const customerDetails = await dbQuery('CALL customer_get_customer(?)', customerId);
