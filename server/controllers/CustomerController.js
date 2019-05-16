@@ -73,8 +73,8 @@ class CustomerController {
   }
 
   /**
-   * @method login
-   * @description Controller to handle user login
+   * @method updateCustomerDetails
+   * @description Controller to update Customer profile details
    * @param {object} req - The request object
    * @param {object} res - The response object
    * @returns {object} - Response object
@@ -90,6 +90,23 @@ class CustomerController {
       const customerData = customerDetails[0][0];
       delete customerData.password;
 
+      return ResponseHandler.success(customerData, res);
+    } catch (error) {
+      return ResponseHandler.serverError(res);
+    }
+  }
+
+  /**
+   * @method login
+   * @description Controller to get customer details
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} - Response object
+   */
+  static async getCustomerDetails(req, res) {
+    const { customerData } = req;
+    try {
+      delete customerData.password;
       return ResponseHandler.success(customerData, res);
     } catch (error) {
       return ResponseHandler.serverError(res);

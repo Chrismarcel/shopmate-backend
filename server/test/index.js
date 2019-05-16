@@ -1,4 +1,5 @@
 import './homepage.spec';
-import './register.spec';
-import './login.spec';
-import './updateCustomerProfile';
+import './customer/register.spec';
+import './customer/login.spec';
+import './customer/updateCustomerProfile.spec';
+import './customer/getCustomer.spec';
