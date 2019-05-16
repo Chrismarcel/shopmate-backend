@@ -2,6 +2,7 @@ import { check, validationResult } from 'express-validator/check';
 import dbQuery from '../database/dbconnection';
 import FieldValidation from './FieldValidation';
 import ResponseHandler from '../helpers/ResponseHandler';
+import HelperUtils from '../helpers/Utils';
 
 /**
  * @class ValidateUser
@@ -10,11 +11,11 @@ import ResponseHandler from '../helpers/ResponseHandler';
  */
 class ValidateUser {
   /**
-   * @method checkUserDetails
+   * @method validateRegistrationFields
    * @description Validates registration details using express validator
    * @returns {array} - Array of validation methods
    */
-  static checkUserDetails() {
+  static validateRegistrationFields() {
     return [
       check('name')
         .exists()
@@ -26,6 +27,17 @@ class ValidateUser {
         .exists()
         .withMessage('required'),
 
+      ...ValidateUser.validateLoginFields()
+    ];
+  }
+
+  /**
+   * @method validateLoginFields
+   * @description Validates login fields using express validator
+   * @returns {array} - Array of validation methods
+   */
+  static validateLoginFields() {
+    return [
       check('email')
         .exists()
         .withMessage('required')
@@ -89,6 +101,65 @@ class ValidateUser {
         code: 'USR_04',
         message: 'The email already exists',
         field: 'email'
+      },
+      res);
+    } catch (error) {
+      return ResponseHandler.serverError(res);
+    }
+  }
+
+  /**
+   * @method loginUser
+   * @description Validates login details provided by user
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {callback} next - Callback method
+   * @returns {object} - JSON response object
+   */
+  static async loginUser(req, res, next) {
+    const { email, password } = req.body;
+    const fields = validationResult(req).mapped();
+
+    // Cater for required fields errors, i.e if required field was omitted
+    const requiredFieldsErrors = FieldValidation.validateRequiredFields(fields);
+
+    // Cater for other generic responses e.g invalid email, max length of characters etc
+    const genericFieldErrors = FieldValidation.validateField(fields);
+
+    if (requiredFieldsErrors.length > 0) {
+      return ResponseHandler.badRequest({
+        code: 'USR_02',
+        message: 'The field(s) is/are required.',
+        field: `${requiredFieldsErrors.join(', ')}`
+      },
+      res);
+    }
+
+    if (genericFieldErrors.length > 0) {
+      const errorField = genericFieldErrors;
+      return ResponseHandler.badRequest({
+        code: 'USR_03',
+        message: fields[errorField].msg,
+        field: errorField
+      },
+      res);
+    }
+
+    // Check if user email is unique
+    try {
+      const customerDetails = await dbQuery('CALL customer_get_login_info(?)', email);
+      if (customerDetails[0].length > 0) {
+        const hashedPassword = customerDetails[0][0].password;
+        const passwordIsCorrect = HelperUtils.verifyPassword(password, hashedPassword);
+        if (passwordIsCorrect) {
+          req.userId = customerDetails[0][0].customer_id;
+          return next();
+        }
+      }
+      return ResponseHandler.badRequest({
+        code: 'USR_01',
+        message: 'Email or Password is invalid',
+        field: 'email, password'
       },
       res);
     } catch (error) {

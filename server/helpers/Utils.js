@@ -45,10 +45,21 @@ class HelperUtils {
    */
   static hashPassword(password) {
     const hashedPassword = crypto
-      .pbkdf2Sync(password, privateKey, 10000, 5, 'SHA512')
+      .pbkdf2Sync(`${password}`, privateKey, 10000, 20, 'SHA512')
       .toString('hex');
 
     return hashedPassword;
+  }
+
+  /**
+   * @method validatePassword
+   * @description Validate a users password
+   * @param {string} password The users password
+   * @param {string} hashedPassword The hashedPassword
+   * @returns {boolean} If password matched or not
+   */
+  static verifyPassword(password, hashedPassword) {
+    return HelperUtils.hashPassword(password) === hashedPassword;
   }
 }
 
