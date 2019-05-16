@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 import dbQuery from '../database/dbconnection';
-import Utils from '../helpers/Utils';
-import ResponseHandler from '../helpers/ResponseHandler';
+import { HelperUtils, ResponseHandler } from '../helpers';
 
 dotenv.config();
 
@@ -10,17 +9,17 @@ dotenv.config();
  * @description Handles User oriented actions
  * @exports ValidateUser
  */
-class UserController {
+class CustomerController {
   /**
-   * @method register
+   * @method registerCustomer
    * @description Registers a new user
    * @param {object} req - The request object
    * @param {object} res - The response object
    * @returns {object} - Response object
    */
-  static async register(req, res) {
+  static async registerCustomer(req, res) {
     const { name, email, password } = req;
-    const hashedPassword = Utils.hashPassword(password);
+    const hashedPassword = HelperUtils.hashPassword(password);
     try {
       const registerCustomerQuery = await dbQuery('CALL customer_add(?, ?, ?)', [
         name,
@@ -31,9 +30,39 @@ class UserController {
       const customerDetails = await dbQuery('CALL customer_get_customer(?)', userId);
       const customerData = customerDetails[0][0];
       delete customerData.password;
-      const accessToken = `Bearer ${Utils.generateToken({ userId, email, name })}`;
+      const accessToken = `Bearer ${HelperUtils.generateToken({ userId, email, name })}`;
       ResponseHandler.success({
-        schema: customerData,
+        customer: customerData,
+        accessToken,
+        expires_in: '24h'
+      },
+      res);
+    } catch (error) {
+      return ResponseHandler.serverError(res);
+    }
+  }
+
+  /**
+   * @method loginCustomer
+   * @description Controller to handle user login
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} - Response object
+   */
+  static async loginCustomer(req, res) {
+    const { userId } = req;
+    try {
+      const customerDetails = await dbQuery('CALL customer_get_customer(?)', userId);
+      const customerData = customerDetails[0][0];
+      const { name, email } = customerData;
+      delete customerData.password;
+      const accessToken = `Bearer ${HelperUtils.generateToken({
+        email,
+        userId,
+        name
+      })}`;
+      ResponseHandler.success({
+        customer: customerData,
         accessToken,
         expires_in: '24h'
       },
@@ -50,28 +79,22 @@ class UserController {
    * @param {object} res - The response object
    * @returns {object} - Response object
    */
-  static async login(req, res) {
-    const { userId } = req;
+  static async updateCustomerDetails(req, res) {
+    const { customerDetails: customerProfileDetails } = req;
+    const queryParams = Object.values(customerProfileDetails);
     try {
-      const customerDetails = await dbQuery('CALL customer_get_customer(?)', userId);
+      await dbQuery('CALL customer_update_account(?, ?, ?, ?, ?, ?, ?)', queryParams);
+      const customerId = queryParams[0];
+
+      const customerDetails = await dbQuery('CALL customer_get_customer(?)', customerId);
       const customerData = customerDetails[0][0];
-      const { name, email } = customerData;
       delete customerData.password;
-      const accessToken = `Bearer ${Utils.generateToken({
-        email,
-        userId,
-        name
-      })}`;
-      ResponseHandler.success({
-        schema: customerData,
-        accessToken,
-        expires_in: '24h'
-      },
-      res);
+
+      return ResponseHandler.success(customerData, res);
     } catch (error) {
       return ResponseHandler.serverError(res);
     }
   }
 }
 
-export default UserController;
+export default CustomerController;

@@ -1,17 +1,24 @@
 import express from 'express';
-import ValidateUser from '../middlewares/ValidateUser';
-import UserController from '../controllers/UserController';
+import ValidateCustomer from '../middlewares/ValidateCustomer';
+import AuthenticateUser from '../middlewares/AuthenticateUser';
+import CustomerController from '../controllers/CustomerController';
 
 const customerRoute = express.Router();
 
 customerRoute.post('/customers',
-  ValidateUser.validateRegistrationFields(),
-  ValidateUser.registerUser,
-  UserController.register);
+  ValidateCustomer.validateRegistrationFields(),
+  ValidateCustomer.registrationDetails,
+  CustomerController.registerCustomer);
 
 customerRoute.post('/customers/login',
-  ValidateUser.validateLoginFields(),
-  ValidateUser.loginUser,
-  UserController.login);
+  ValidateCustomer.validateLoginFields(),
+  ValidateCustomer.loginDetails,
+  CustomerController.loginCustomer);
+
+customerRoute.put('/customer',
+  AuthenticateUser.verifyUser,
+  ValidateCustomer.validateAccountDetails(),
+  ValidateCustomer.profileUpdateDetails,
+  CustomerController.updateCustomerDetails);
 
 export default customerRoute;
