@@ -49,11 +49,11 @@ class ValidateUser {
   }
 
   /**
-   * @method validateAccountDetails
-   * @description Validates Customer Account details
+   * @method validateProfileDetails
+   * @description Validates Customer Profile details
    * @returns {array} - Array of validation methods
    */
-  static validateAccountDetails() {
+  static validateProfileDetails() {
     return [
       check('name')
         .exists()
@@ -87,6 +87,43 @@ class ValidateUser {
         .optional()
         .isMobilePhone('any')
         .withMessage('This is an invalid phone number')
+    ];
+  }
+
+  /**
+   * @method validateAddressFields
+   * @description Validates address fields using express validator
+   * @returns {array} - Array of validation methods
+   */
+  static validateAddressFields() {
+    return [
+      check('address_1')
+        .exists()
+        .withMessage('required'),
+
+      check('address_2').optional(),
+
+      check('city')
+        .exists()
+        .withMessage('required'),
+
+      check('region')
+        .exists()
+        .withMessage('required'),
+
+      check('country')
+        .exists()
+        .withMessage('required'),
+
+      check('postal_code')
+        .exists()
+        .withMessage('required'),
+
+      check('shipping_region_id')
+        .exists()
+        .withMessage('required')
+        .isNumeric()
+        .withMessage('The Shipping Region ID is not number')
     ];
   }
 }
