@@ -126,6 +126,21 @@ class ValidateUser {
         .withMessage('The Shipping Region ID is not number')
     ];
   }
+
+  /**
+   * @method validateCreditCardField
+   * @description Validates credit card field using express validator
+   * @returns {array} - Array of validation methods
+   */
+  static validateCreditCardField() {
+    return [
+      check('credit_card')
+        .exists()
+        .withMessage('required')
+        .isCreditCard()
+        .withMessage('This is an invalid Credit Card.')
+    ];
+  }
 }
 
 export default ValidateUser;

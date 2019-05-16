@@ -133,7 +133,7 @@ class ValidateUser {
 
   /**
    * @method updateAddressDetails
-   * @description Validates profile details provided by user during update
+   * @description Validates address details provided by user during update
    * @param {object} req - The request object
    * @param {object} res - The response object
    * @param {callback} next - Callback method
@@ -171,6 +171,27 @@ class ValidateUser {
 
     const updatedCustomerDetails = Object.assign(customerAddressData, body);
     req.customerDetails = updatedCustomerDetails;
+    return next();
+  }
+
+  /**
+   * @method updateCreditCardDetails
+   * @description Validates credit card details provided by user during update
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {callback} next - Callback method
+   * @returns {object} - JSON response object
+   */
+  static async updateCreditCardDetails(req, res, next) {
+    const fields = validationResult(req).mapped();
+    const errorObj = ValidateUser.validateUserFields(fields, 'USR_08');
+    if (Object.keys(errorObj).length) {
+      return ResponseHandler.badRequest(errorObj, res);
+    }
+
+    const { body, customerData } = req;
+    const { customer_id: customerId } = customerData;
+    req.customerDetails = { customerId, creditCard: body.credit_card };
     return next();
   }
 

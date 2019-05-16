@@ -54,8 +54,8 @@ class CustomerController {
     try {
       const customerDetails = await dbQuery('CALL customer_get_customer(?)', userId);
       const customerData = customerDetails[0][0];
-      const { name, email } = customerData;
       delete customerData.password;
+      const { name, email } = customerData;
       const accessToken = `Bearer ${HelperUtils.generateToken({
         email,
         userId,
@@ -86,9 +86,7 @@ class CustomerController {
       await dbQuery('CALL customer_update_account(?, ?, ?, ?, ?, ?, ?)', queryParams);
       const customerId = queryParams[0];
 
-      const customerDetails = await dbQuery('CALL customer_get_customer(?)', customerId);
-      const customerData = customerDetails[0][0];
-      delete customerData.password;
+      const customerData = await CustomerController.fetchCustomer(customerId);
 
       return ResponseHandler.success(customerData, res);
     } catch (error) {
@@ -110,9 +108,29 @@ class CustomerController {
       await dbQuery('CALL customer_update_address(?, ?, ?, ?, ?, ?, ?, ?)', queryParams);
       const customerId = queryParams[0];
 
-      const customerDetails = await dbQuery('CALL customer_get_customer(?)', customerId);
-      const customerData = customerDetails[0][0];
-      delete customerData.password;
+      const customerData = await CustomerController.fetchCustomer(customerId);
+
+      return ResponseHandler.success(customerData, res);
+    } catch (error) {
+      return ResponseHandler.serverError(res);
+    }
+  }
+
+  /**
+   * @method updateCustomerCreditCardDetails
+   * @description Controller to update Customer credit card details
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} - Response object
+   */
+  static async updateCustomerCreditCardDetails(req, res) {
+    const { customerDetails: customerCreditCardDetails } = req;
+    const queryParams = Object.values(customerCreditCardDetails);
+    try {
+      await dbQuery('CALL customer_update_credit_card(?, ?)', queryParams);
+      const customerId = queryParams[0];
+
+      const customerData = await CustomerController.fetchCustomer(customerId);
 
       return ResponseHandler.success(customerData, res);
     } catch (error) {
@@ -135,6 +153,20 @@ class CustomerController {
     } catch (error) {
       return ResponseHandler.serverError(res);
     }
+  }
+
+  /**
+   * @method fetchCustomer
+   * @description Method to get customer details from the database
+   * @param {object} customerId - The customer id
+   * @returns {object} - Response object
+   */
+  static async fetchCustomer(customerId) {
+    const customerDetails = await dbQuery('CALL customer_get_customer(?)', customerId);
+    const customerData = customerDetails[0][0];
+    delete customerData.password;
+
+    return customerData;
   }
 }
 

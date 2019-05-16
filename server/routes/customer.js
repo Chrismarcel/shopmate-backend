@@ -28,6 +28,12 @@ customerRoute.put('/customers/address',
   ValidateCustomer.updateAddressDetails,
   CustomerController.updateCustomerAddressDetails);
 
+customerRoute.put('/customers/creditCard',
+  AuthenticateUser.verifyUser,
+  customerValidator.validateCreditCardField(),
+  ValidateCustomer.updateCreditCardDetails,
+  CustomerController.updateCustomerCreditCardDetails);
+
 customerRoute.get('/customer', AuthenticateUser.verifyUser, CustomerController.getCustomerDetails);
 
 export default customerRoute;
