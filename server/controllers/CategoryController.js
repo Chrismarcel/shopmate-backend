@@ -18,9 +18,25 @@ class CategoryController {
    * @returns {object} - Response object
    */
   static async getAllCategories(req, res) {
+    const { query } = req;
+    const { order = 'category_id,ASC', limit = 0, page = 1 } = query;
+    const totalLimit = Number(limit) || 20;
+    const sortOptions = order.split(',');
+    const sortField = sortOptions[0];
+    const sortDirection = sortOptions[1];
+
     try {
-      const rows = await dbQuery('SELECT * FROM category');
-      const count = rows.length;
+      const getCountQuery = await dbQuery('SELECT COUNT(*) AS count FROM category');
+      const { count } = getCountQuery[0];
+      const getCategoriesQuery = `
+      SELECT * 
+      FROM category 
+      ORDER BY ${sortField} ${sortDirection} 
+      LIMIT ${totalLimit} 
+      OFFSET ${(page - 1) * totalLimit}
+      `;
+      const rows = await dbQuery(getCategoriesQuery);
+
       return ResponseHandler.success({ count, rows }, res);
     } catch (error) {
       return ResponseHandler.serverError(res);
@@ -38,11 +54,33 @@ class CategoryController {
     const { categoryDetails } = req;
     const { category_id: categoryId } = categoryDetails;
 
-    const categoryQuery = await dbQuery('SELECT department_id FROM category WHERE category_id = ?',
-      categoryId);
-    const departmentId = categoryQuery[0].department_id;
+    try {
+      const categoryQuery = await dbQuery('SELECT department_id FROM category WHERE category_id = ?',
+        categoryId);
+      const departmentId = categoryQuery[0].department_id;
 
-    return ResponseHandler.success({ ...categoryDetails, department_id: departmentId }, res);
+      return ResponseHandler.success({ ...categoryDetails, department_id: departmentId }, res);
+    } catch (error) {
+      return ResponseHandler.serverError(res);
+    }
+  }
+
+  /**
+   * @method getCategoryProducts
+   * @description Method to get categories of a product
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} - Response object
+   */
+  static async getCategoryProducts(req, res) {
+    const { productId } = req;
+    try {
+      const categoriesQuery = await dbQuery('CALL catalog_get_category_products(?)', productId);
+      const categories = categoriesQuery[0];
+      return ResponseHandler.success(categories, res);
+    } catch (error) {
+      return ResponseHandler.serverError(res);
+    }
   }
 }
 

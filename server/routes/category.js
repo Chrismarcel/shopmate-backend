@@ -16,6 +16,8 @@ categoryRoute.get('/categories',
       'description,DESC'
     ],
     ['name', 'category_id']),
+  Validator.validateLimit(),
+  Validator.validatePage(),
   ValidateCategory.validatePagination,
   CategoryController.getAllCategories);
 
@@ -23,5 +25,10 @@ categoryRoute.get('/categories/:category_id',
   Validator.validateId('category_id'),
   ValidateCategory.validateCategoryId,
   CategoryController.getCategoryWithId);
+
+categoryRoute.get('/categories/inProduct/:product_id',
+  Validator.validateId('product_id'),
+  ValidateCategory.validateProductId,
+  CategoryController.getCategoryProducts);
 
 export default categoryRoute;

@@ -17,7 +17,19 @@ const Validators = {
       .withMessage('The field of order is not allow sorting.')
   ],
 
-  validateLimit: field => [check(field).optional.isNumeric()]
+  validateLimit: () => [
+    check('limit')
+      .optional()
+      .isNumeric()
+      .withMessage('The limit must be a number.')
+  ],
+
+  validatePage: () => [
+    check('page')
+      .optional()
+      .isNumeric()
+      .withMessage('The page must be a number.')
+  ]
 };
 
 export default Validators;

@@ -44,19 +44,39 @@ class ValidateCategory {
    * @param {object} req - The request object
    * @param {object} res - The response object
    * @param {callback} next - Callback method
-   * @returns {array | object} - Error object
+   * @returns {object} - Response error object
    */
   static validatePagination(req, res, next) {
     const fields = validationResult(req).mapped();
     const errorObj = ValidateCategory.validateCategoryFields(fields);
-    errorObj.code = 'PAG_01';
     delete errorObj.field;
     if (Object.keys(errorObj).length) {
+      errorObj.code = 'PAG_01';
       if (errorObj.message.includes('sorting')) {
         errorObj.code = 'PAG_02';
       }
       return ResponseHandler.badRequest(errorObj, res);
     }
+    return next();
+  }
+
+  /**
+   * @method validateProductId
+   * @description Validates product id
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @param {callback} next - Callback method
+   * @returns {object} - Response error object
+   */
+  static validateProductId(req, res, next) {
+    const { product_id: productId } = req.params;
+    const fields = validationResult(req).mapped();
+    const errorObj = ValidateCategory.validateCategoryFields(fields);
+
+    if (Object.keys(errorObj).length) {
+      return ResponseHandler.badRequest(errorObj, res);
+    }
+    req.productId = productId;
     return next();
   }
 
