@@ -229,6 +229,9 @@ class ValidateCustomer {
       if (errorObj.message.includes('long') || errorObj.message.includes('short')) {
         errorObj.code = 'USR_07';
       }
+
+      if (errorObj.field === 'credit_card') errorObj.code = 'USR_08';
+
       return errorObj;
     }
 
