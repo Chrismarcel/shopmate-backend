@@ -1,9 +1,11 @@
 import { check } from 'express-validator/check';
 
 const Validators = {
-  validateId: field => [
+  validateId: (field, required = true) => [
     check(field)
       .optional()
+      .custom(fieldValue => required || !Number(fieldValue))
+      .withMessage('required')
       .isNumeric()
       .withMessage('The ID is not a number.')
   ],

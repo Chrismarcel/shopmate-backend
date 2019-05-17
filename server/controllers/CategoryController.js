@@ -82,6 +82,25 @@ class CategoryController {
       return ResponseHandler.serverError(res);
     }
   }
+
+  /**
+   * @method getCategoriesWithDepartmentId
+   * @description Method to get categories in a department
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} - Response object
+   */
+  static async getCategoriesWithDepartmentId(req, res) {
+    const { department_id: departmentId } = req.params;
+    try {
+      const categoriesQuery = await dbQuery('CALL catalog_get_department_categories(?)',
+        departmentId);
+      const categories = categoriesQuery[0];
+      return ResponseHandler.success(categories, res);
+    } catch (error) {
+      return ResponseHandler.serverError(res);
+    }
+  }
 }
 
 export default CategoryController;

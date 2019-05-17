@@ -21,8 +21,18 @@ class ValidateDepartment {
     const { department_id: departmentId } = req.params;
     const fields = validationResult(req).mapped();
     const errorObj = ValidateDepartment.validateDepartmentFields(fields);
+
     if (Object.keys(errorObj).length) {
       return ResponseHandler.badRequest(errorObj, res);
+    }
+
+    if (!departmentId) {
+      return ResponseHandler.badRequest({
+        code: 'DEP_01',
+        message: 'The field is required',
+        field: 'department_id'
+      },
+      res);
     }
 
     const departmentExists = await ValidateDepartment.departmentExists(departmentId);
@@ -45,10 +55,12 @@ class ValidateDepartment {
    * @returns {array | object} - Error object
    */
   static validateDepartmentFields(fields) {
+    const requiredFieldsErrors = FieldValidation.validateRequiredFields(fields, 'DEP_01');
     const genericErrors = FieldValidation.validateField(fields, 'DEP_01');
 
-    if (genericErrors) {
-      return genericErrors;
+    if (genericErrors || requiredFieldsErrors) {
+      const errorObj = requiredFieldsErrors || genericErrors;
+      return errorObj;
     }
 
     return [];
