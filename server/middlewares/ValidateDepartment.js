@@ -45,7 +45,6 @@ class ValidateDepartment {
    * @returns {array | object} - Error object
    */
   static validateDepartmentFields(fields) {
-    // Cater for other generic responses e.g invalid email, max length of characters etc
     const genericErrors = FieldValidation.validateField(fields, 'DEP_01');
 
     if (genericErrors) {

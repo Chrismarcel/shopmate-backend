@@ -1,4 +1,5 @@
-import './homepage.spec';
+import './welcomePage.spec';
 import './customer';
 import './department';
 import './tax';
+import './category';

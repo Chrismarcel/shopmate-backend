@@ -32,7 +32,7 @@ describe('Test get a single tax endpoint GET /tax/:tax_id', () => {
       });
   });
 
-  it('should return 400 if department id is not a number', (done) => {
+  it('should return 400 if tax id is not a number', (done) => {
     chai
       .request(app)
       .get('/tax/abc')
@@ -45,7 +45,7 @@ describe('Test get a single tax endpoint GET /tax/:tax_id', () => {
       });
   });
 
-  it("should return 400 if department doesn't exist", (done) => {
+  it("should return 400 if tax doesn't exist", (done) => {
     chai
       .request(app)
       .get('/tax/10000')

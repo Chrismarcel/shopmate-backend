@@ -27,7 +27,7 @@ class ValidateTax {
 
     const taxExists = await ValidateTax.taxExists(taxId);
     if (taxExists) {
-      req.taxDetails = { ...taxExists };
+      req.taxDetails = taxExists;
       return next();
     }
     const error = {
@@ -45,7 +45,6 @@ class ValidateTax {
    * @returns {array | object} - Error object
    */
   static validateTaxFields(fields) {
-    // Cater for other generic responses e.g invalid email, max length of characters etc
     const genericErrors = FieldValidation.validateField(fields, 'TAX_01');
 
     if (genericErrors) {
