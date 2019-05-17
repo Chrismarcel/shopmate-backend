@@ -1,3 +1,11 @@
-import customerRoute from './customer';
+import express from 'express';
 
-export default customerRoute;
+import customerRoute from './customer';
+import departmentRoute from './department';
+
+const router = express.Router();
+
+router.use(customerRoute);
+router.use(departmentRoute);
+
+export default router;

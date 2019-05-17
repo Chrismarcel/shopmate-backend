@@ -4,14 +4,14 @@ import FieldValidation from './FieldValidation';
 import { HelperUtils, ResponseHandler } from '../helpers';
 
 /**
- * @class ValidateUser
- * @description Validates user registration details
- * @exports ValidateUser
+ * @class ValidateCustomer
+ * @description Validates Customer registration details
+ * @exports ValidateCustomer
  */
-class ValidateUser {
+class ValidateCustomer {
   /**
    * @method registrationDetails
-   * @description Validates registration details provided by user
+   * @description Validates registration details provided by customer
    * @param {object} req - The request object
    * @param {object} res - The response object
    * @param {callback} next - Callback method
@@ -20,14 +20,15 @@ class ValidateUser {
   static async registrationDetails(req, res, next) {
     const { email, name, password } = req.body;
     const fields = validationResult(req).mapped();
-    const errorObj = ValidateUser.validateUserFields(fields);
-    if (errorObj && Object.keys(errorObj).length > 0) {
+    const errorObj = ValidateCustomer.validateUserFields(fields);
+
+    if (Object.keys(errorObj).length) {
       return ResponseHandler.badRequest(errorObj, res);
     }
 
     // Check if user email is unique
     try {
-      if (await ValidateUser.emailIsUnique(email, res)) {
+      if (await ValidateCustomer.emailIsUnique(email, res)) {
         req.name = name.trim();
         req.email = email.trim();
         req.password = password;
@@ -55,7 +56,7 @@ class ValidateUser {
   static async loginDetails(req, res, next) {
     const { email, password } = req.body;
     const fields = validationResult(req).mapped();
-    const errorObj = ValidateUser.validateUserFields(fields);
+    const errorObj = ValidateCustomer.validateUserFields(fields);
     if (Object.keys(errorObj).length) {
       return ResponseHandler.badRequest(errorObj, res);
     }
@@ -97,7 +98,7 @@ class ValidateUser {
    */
   static async updateProfileDetails(req, res, next) {
     const fields = validationResult(req).mapped();
-    const errorObj = ValidateUser.validateUserFields(fields);
+    const errorObj = ValidateCustomer.validateUserFields(fields);
     if (Object.keys(errorObj).length) {
       return ResponseHandler.badRequest(errorObj, res);
     }
@@ -141,7 +142,7 @@ class ValidateUser {
    */
   static async updateAddressDetails(req, res, next) {
     const fields = validationResult(req).mapped();
-    const errorObj = ValidateUser.validateUserFields(fields, 'USR-09');
+    const errorObj = ValidateCustomer.validateUserFields(fields, 'USR-09');
     if (Object.keys(errorObj).length) {
       return ResponseHandler.badRequest(errorObj, res);
     }
@@ -184,7 +185,7 @@ class ValidateUser {
    */
   static async updateCreditCardDetails(req, res, next) {
     const fields = validationResult(req).mapped();
-    const errorObj = ValidateUser.validateUserFields(fields, 'USR_08');
+    const errorObj = ValidateCustomer.validateUserFields(fields, 'USR_08');
     if (Object.keys(errorObj).length) {
       return ResponseHandler.badRequest(errorObj, res);
     }
@@ -212,38 +213,27 @@ class ValidateUser {
 
   /**
    * @method validateUserFields
-   * @description Validates if user email is unique
-   * @param {string} fields - Error fields
-   * @param {string} errorCode - Error code
+   * @description Validates fields specified by customer
+   * @param {string} fields - Fields specified in either request parama
    * @returns {boolean} - If user email is unique or not
    */
-  static validateUserFields(fields, errorCode = 'USR_03') {
+  static validateUserFields(fields) {
     // Cater for required fields errors, i.e if required field was omitted
-    const requiredFieldsErrors = FieldValidation.validateRequiredFields(fields);
+    const requiredFieldsErrors = FieldValidation.validateRequiredFields(fields, 'USR_02');
 
     // Cater for other generic responses e.g invalid email, max length of characters etc
-    const genericFieldErrors = FieldValidation.validateField(fields);
+    const genericErrors = FieldValidation.validateField(fields, 'USR_03');
 
-    if (requiredFieldsErrors.length > 0) {
-      return {
-        code: 'USR_02',
-        message: 'The field(s) is/are required.',
-        field: `${requiredFieldsErrors.join(', ')}`
-      };
+    if (requiredFieldsErrors || genericErrors) {
+      const errorObj = requiredFieldsErrors || genericErrors;
+      if (errorObj.message.includes('long') || errorObj.message.includes('short')) {
+        errorObj.code = 'USR_07';
+      }
+      return errorObj;
     }
 
-    if (genericFieldErrors.length > 0) {
-      const errorField = genericFieldErrors;
-      const errorMessage = fields[errorField].msg;
-      const characterLengthError = errorMessage.includes('long') || errorMessage.includes('short');
-      return {
-        code: characterLengthError ? 'USR_07' : errorCode,
-        message: errorMessage,
-        field: errorField
-      };
-    }
     return [];
   }
 }
 
-export default ValidateUser;
+export default ValidateCustomer;

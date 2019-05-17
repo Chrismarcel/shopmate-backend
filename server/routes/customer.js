@@ -1,8 +1,7 @@
 import express from 'express';
-import ValidateCustomer from '../middlewares/ValidateCustomer';
-import AuthenticateUser from '../middlewares/AuthenticateUser';
-import CustomerController from '../controllers/CustomerController';
-import customerValidator from '../helpers/validations/customerValidator';
+import { ValidateCustomer, AuthenticateUser } from '../middlewares';
+import { CustomerController } from '../controllers';
+import customerValidator from '../helpers/validators/customerValidator';
 
 const customerRoute = express.Router();
 
