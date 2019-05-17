@@ -4,7 +4,7 @@ import FieldValidation from './FieldValidation';
 import { ResponseHandler } from '../helpers';
 
 /**
- * @class ValidateDepartmnet
+ * @class ValidateDepartment
  * @description Validates department details
  * @exports ValidateUser
  */
@@ -41,19 +41,15 @@ class ValidateDepartment {
   /**
    * @method validateDepartmentFields
    * @description Validates fields specified for the department endpoint
-   * @param {string} fields - Fields specified in either request parama
-   * @returns {boolean} - If user email is unique or not
+   * @param {string} fields - Fields specified in request param
+   * @returns {array | object} - Error object
    */
   static validateDepartmentFields(fields) {
-    // Cater for required fields errors, i.e if required field was omitted
-    const requiredFieldsErrors = FieldValidation.validateRequiredFields(fields, 'DEP_03');
-
     // Cater for other generic responses e.g invalid email, max length of characters etc
     const genericErrors = FieldValidation.validateField(fields, 'DEP_01');
 
-    if (requiredFieldsErrors || genericErrors) {
-      const errorObj = requiredFieldsErrors || genericErrors;
-      return errorObj;
+    if (genericErrors) {
+      return genericErrors;
     }
 
     return [];
@@ -62,8 +58,8 @@ class ValidateDepartment {
   /**
    * @method departmentExists
    * @description Validates if a specific department exists
-   * @param {string} departmentId - Fields specified in either request parama
-   * @returns {boolean} - If user email is unique or not
+   * @param {string} departmentId - Fields specified in request param
+   * @returns {boolean} - If department exists or not
    */
   static async departmentExists(departmentId) {
     const departmentDetails = await dbQuery('CALL catalog_get_department_details(?)', departmentId);

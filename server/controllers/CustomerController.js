@@ -6,8 +6,8 @@ dotenv.config();
 
 /**
  * @class CustomerController
- * @description Handles User oriented actions
- * @exports ValidateUser
+ * @description Handles Customer oriented actions
+ * @exports CustomerController
  */
 class CustomerController {
   /**

@@ -6,8 +6,8 @@ dotenv.config();
 
 /**
  * @class DepartmentController
- * @description Handles User oriented actions
- * @exports ValidateUser
+ * @description Handles Department oriented actions
+ * @exports DepartmentController
  */
 class DepartmentController {
   /**
@@ -29,8 +29,8 @@ class DepartmentController {
   }
 
   /**
-   * @method getAllDepartments
-   * @description Method to get all departments from the database
+   * @method getDepartmentWithId
+   * @description Method to get a single department from the database
    * @param {object} req - The request object
    * @param {object} res - The response object
    * @returns {object} - Response object
