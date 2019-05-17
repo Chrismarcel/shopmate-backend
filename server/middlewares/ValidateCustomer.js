@@ -218,7 +218,6 @@ class ValidateCustomer {
    * @returns {boolean} - If user email is unique or not
    */
   static validateUserFields(fields) {
-    // Cater for required fields errors, i.e if required field was omitted
     const requiredFieldsErrors = FieldValidation.validateRequiredFields(fields, 'USR_02');
 
     // Cater for other generic responses e.g invalid email, max length of characters etc

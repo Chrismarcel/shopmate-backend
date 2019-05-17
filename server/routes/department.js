@@ -1,14 +1,14 @@
 import express from 'express';
 import { DepartmentController } from '../controllers';
 import { ValidateDepartment } from '../middlewares';
-import IDValidator from '../helpers/validators/idValidator';
+import Validator from '../helpers/validators/validators';
 
 const departmentRoute = express.Router();
 
 departmentRoute.get('/departments', DepartmentController.getAllDepartments);
 
 departmentRoute.get('/departments/:department_id',
-  IDValidator.validateId(),
+  Validator.validateId('department_id'),
   ValidateDepartment.validateDepartmentId,
   DepartmentController.getDepartmentWithId);
 
