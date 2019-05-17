@@ -5,32 +5,46 @@
  */
 class FieldValidation {
   /**
-   * @method validate
+   * @method validateRequiredFields
    * @description Checks if there are required fields that aren't specified by user
    * @param {object} fields - Fields to be validated
+   * @param {object} errorCode - Error code
    * @returns {array} - Array of unspecified fields
    */
-  static validateRequiredFields(fields) {
+  static validateRequiredFields(fields, errorCode) {
     if (Object.keys(fields).length > 0) {
       const fieldList = Object.keys(fields);
       const errorFields = fieldList.filter(field => fields[field].msg.includes('required'));
-      return errorFields;
+      if (errorFields.length > 0) {
+        return {
+          code: errorCode,
+          message: 'The field(s) is/are required.',
+          field: `${errorFields.join(', ')}`
+        };
+      }
     }
-    return [];
+    return false;
   }
 
   /**
    * @method validateField
    * @description Validates the individual fields specified in request body
    * @param {object} fields - Error object
+   * @param {object} errorCode - Error code
    * @returns {array} - Array of unspecified fields
    */
-  static validateField(fields) {
+  static validateField(fields, errorCode) {
     if (Object.keys(fields).length > 0) {
       const errorField = Object.keys(fields)[0];
-      return errorField;
+      const errorMessage = fields[errorField].msg;
+
+      return {
+        code: errorCode,
+        message: errorMessage,
+        field: errorField
+      };
     }
-    return [];
+    return false;
   }
 }
 

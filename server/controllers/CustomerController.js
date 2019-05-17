@@ -5,7 +5,7 @@ import { HelperUtils, ResponseHandler } from '../helpers';
 dotenv.config();
 
 /**
- * @class UserController
+ * @class CustomerController
  * @description Handles User oriented actions
  * @exports ValidateUser
  */
@@ -139,7 +139,7 @@ class CustomerController {
   }
 
   /**
-   * @method login
+   * @method getCustomerDetails
    * @description Controller to get customer details
    * @param {object} req - The request object
    * @param {object} res - The response object
