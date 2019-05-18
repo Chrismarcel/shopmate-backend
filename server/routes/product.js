@@ -25,6 +25,21 @@ productRoute.get('/products/inDepartment/:department_id?',
   ValidateDepartment.validateDepartmentId,
   ProductController.getSpecificProducts);
 
+productRoute.get('/products/:product_id/details',
+  Validator.validateId('product_id'),
+  ValidateProduct.validateProduct,
+  ProductController.getAdditionalProductInfo);
+
+productRoute.get('/products/:product_id/locations',
+  Validator.validateId('product_id'),
+  ValidateProduct.validateProduct,
+  ProductController.getAdditionalProductInfo);
+
+productRoute.get('/products/:product_id/reviews',
+  Validator.validateId('product_id'),
+  ValidateProduct.validateProduct,
+  ProductController.getAdditionalProductInfo);
+
 productRoute.get('/products/:product_id$',
   Validator.validateId('product_id'),
   ValidateProduct.validateProduct,

@@ -132,6 +132,25 @@ class ProductController {
   }
 
   /**
+   * @method getAdditionalProductInfo
+   * @description Method to get additional product info
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} - Response object
+   */
+  static async getAdditionalProductInfo(req, res) {
+    const { productDetails } = req;
+    const { product_id: productId } = productDetails;
+    const field = req.path.split('/')[3];
+    try {
+      const productInfo = await dbQuery(`CALL catalog_get_product_${field}(?)`, productId);
+      return ResponseHandler.success(productInfo[0], res);
+    } catch (error) {
+      return ResponseHandler.serverError(res);
+    }
+  }
+
+  /**
    * @method getProductWithId
    * @description Method to get a single product from the database
    * @param {object} req - The request object
