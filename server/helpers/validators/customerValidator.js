@@ -1,4 +1,4 @@
-import { check } from 'express-validator/check';
+import { body } from 'express-validator/check';
 
 /**
  * @class ValidateUser
@@ -13,7 +13,7 @@ class ValidateUser {
    */
   static validateRegistrationFields() {
     return [
-      check('name')
+      body('name')
         .exists()
         .withMessage('required')
         .isLength({ min: 2 })
@@ -34,7 +34,7 @@ class ValidateUser {
    */
   static validateLoginFields() {
     return [
-      check('email')
+      body('email')
         .exists()
         .withMessage('required')
         .isLength({ min: 0, max: 50 })
@@ -42,7 +42,7 @@ class ValidateUser {
         .isEmail()
         .withMessage('The email is invalid.'),
 
-      check('password')
+      body('password')
         .exists()
         .withMessage('required')
     ];
@@ -55,7 +55,7 @@ class ValidateUser {
    */
   static validateProfileDetails() {
     return [
-      check('name')
+      body('name')
         .exists()
         .withMessage('required')
         .isLength({ min: 2 })
@@ -65,7 +65,7 @@ class ValidateUser {
         .exists()
         .withMessage('required'),
 
-      check('email')
+      body('email')
         .exists()
         .withMessage('required')
         .isLength({ min: 0, max: 50 })
@@ -73,17 +73,17 @@ class ValidateUser {
         .isEmail()
         .withMessage('The email is invalid.'),
 
-      check('day_phone')
+      body('day_phone')
         .optional()
         .isMobilePhone('any')
         .withMessage('This is an invalid phone number'),
 
-      check('eve_phone')
+      body('eve_phone')
         .optional()
         .isMobilePhone('any')
         .withMessage('This is an invalid phone number'),
 
-      check('mob_phone')
+      body('mob_phone')
         .optional()
         .isMobilePhone('any')
         .withMessage('This is an invalid phone number')
@@ -97,29 +97,29 @@ class ValidateUser {
    */
   static validateAddressFields() {
     return [
-      check('address_1')
+      body('address_1')
         .exists()
         .withMessage('required'),
 
-      check('address_2').optional(),
+      body('address_2').optional(),
 
-      check('city')
+      body('city')
         .exists()
         .withMessage('required'),
 
-      check('region')
+      body('region')
         .exists()
         .withMessage('required'),
 
-      check('country')
+      body('country')
         .exists()
         .withMessage('required'),
 
-      check('postal_code')
+      body('postal_code')
         .exists()
         .withMessage('required'),
 
-      check('shipping_region_id')
+      body('shipping_region_id')
         .exists()
         .withMessage('required')
         .isNumeric()
@@ -134,7 +134,7 @@ class ValidateUser {
    */
   static validateCreditCardField() {
     return [
-      check('credit_card')
+      body('credit_card')
         .exists()
         .withMessage('required')
         .isCreditCard()

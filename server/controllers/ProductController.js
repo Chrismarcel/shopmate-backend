@@ -151,6 +151,31 @@ class ProductController {
   }
 
   /**
+   * @method postReview
+   * @description Method to get additional product info
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} - Response object
+   */
+  static async postReview(req, res) {
+    const { productDetails, customerData } = req;
+    const { review, rating } = req.body;
+    const { customer_id: customerId } = customerData;
+    const { product_id: productId } = productDetails;
+    try {
+      const rateProduct = await dbQuery('CALL catalog_create_product_review(?, ?, ?, ?)', [
+        customerId,
+        productId,
+        review,
+        rating
+      ]);
+      return ResponseHandler.success(rateProduct[0], res);
+    } catch (error) {
+      return ResponseHandler.serverError(res);
+    }
+  }
+
+  /**
    * @method getProductWithId
    * @description Method to get a single product from the database
    * @param {object} req - The request object
