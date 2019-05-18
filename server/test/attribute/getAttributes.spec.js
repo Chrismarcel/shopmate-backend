@@ -113,14 +113,14 @@ describe('Test get attribues in a product endpoint GET /attributes/inProduct/:pr
       });
   });
 
-  it('should return 400 if category id is not a number', (done) => {
+  it('should return 400 if product id is not a number', (done) => {
     chai
       .request(app)
       .get('/attributes/inProduct/ab')
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
-        expect(error.code).to.equal('CAT_02');
+        expect(error.code).to.equal('PRD_01');
         expect(error.field).to.equal('product_id');
         expect(error.message).to.equal('The ID is not a number.');
         done(err);

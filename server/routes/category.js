@@ -1,6 +1,6 @@
 import express from 'express';
 import { CategoryController } from '../controllers';
-import { ValidateCategory, ValidateDepartment } from '../middlewares';
+import { ValidateCategory, ValidateDepartment, ValidateProduct } from '../middlewares';
 import Validator from '../helpers/validators/validators';
 
 const categoryRoute = express.Router();
@@ -28,7 +28,7 @@ categoryRoute.get('/categories/:category_id$',
 
 categoryRoute.get('/categories/inProduct/:product_id',
   Validator.validateId('product_id'),
-  ValidateCategory.validateProductId,
+  ValidateProduct.validateProductId,
   CategoryController.getCategoryProducts);
 
 categoryRoute.get('/categories/inDepartment/:department_id?',

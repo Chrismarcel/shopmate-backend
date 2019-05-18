@@ -73,7 +73,8 @@ class CategoryController {
    * @returns {object} - Response object
    */
   static async getCategoryProducts(req, res) {
-    const { productId } = req;
+    const { productDetails } = req;
+    const { product_id: productId } = productDetails;
     try {
       const categoriesQuery = await dbQuery('CALL catalog_get_category_products(?)', productId);
       const categories = categoriesQuery[0];

@@ -5,3 +5,4 @@ import './tax';
 import './category';
 import './attribute';
 import './shipping';
+import './product';

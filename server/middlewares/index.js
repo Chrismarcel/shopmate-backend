@@ -6,6 +6,7 @@ import ValidateTax from './ValidateTax';
 import ValidateCategory from './ValidateCategory';
 import ValidateAttribute from './ValidateAttribute';
 import ValidateShipping from './ValidateShipping';
+import ValidateProduct from './ValidateProduct';
 
 export {
   AuthenticateUser,
@@ -15,5 +16,6 @@ export {
   ValidateTax,
   ValidateCategory,
   ValidateAttribute,
-  ValidateShipping
+  ValidateShipping,
+  ValidateProduct
 };

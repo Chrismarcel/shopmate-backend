@@ -61,26 +61,6 @@ class ValidateCategory {
   }
 
   /**
-   * @method validateProductId
-   * @description Validates product id
-   * @param {object} req - The request object
-   * @param {object} res - The response object
-   * @param {callback} next - Callback method
-   * @returns {object} - Response error object
-   */
-  static validateProductId(req, res, next) {
-    const { product_id: productId } = req.params;
-    const fields = validationResult(req).mapped();
-    const errorObj = ValidateCategory.validateCategoryFields(fields);
-
-    if (Object.keys(errorObj).length) {
-      return ResponseHandler.badRequest(errorObj, res);
-    }
-    req.productId = productId;
-    return next();
-  }
-
-  /**
    * @method validateCategoryFields
    * @description Validates fields specified for the category endpoint
    * @param {string} fields - Fields specified in either request param
