@@ -48,7 +48,7 @@ describe('Test get a single tax endpoint GET /tax/:tax_id', () => {
   it("should return 400 if tax doesn't exist", (done) => {
     chai
       .request(app)
-      .get('/tax/10000')
+      .get('/tax/0')
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);

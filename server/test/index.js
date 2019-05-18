@@ -4,3 +4,4 @@ import './department';
 import './tax';
 import './category';
 import './attribute';
+import './shipping';
