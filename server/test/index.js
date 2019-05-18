@@ -6,3 +6,4 @@ import './category';
 import './attribute';
 import './shipping';
 import './product';
+import './order';
