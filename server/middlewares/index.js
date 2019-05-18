@@ -7,6 +7,7 @@ import ValidateCategory from './ValidateCategory';
 import ValidateAttribute from './ValidateAttribute';
 import ValidateShipping from './ValidateShipping';
 import ValidateProduct from './ValidateProduct';
+import ValidateOrder from './ValidateOrder';
 
 export {
   AuthenticateUser,
@@ -17,5 +18,6 @@ export {
   ValidateCategory,
   ValidateAttribute,
   ValidateShipping,
-  ValidateProduct
+  ValidateProduct,
+  ValidateOrder
 };
