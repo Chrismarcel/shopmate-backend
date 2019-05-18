@@ -17,7 +17,7 @@ class ValidateProduct {
    * @param {callback} next - Callback method
    * @returns {object} - JSON response object
    */
-  static async validateProductId(req, res, next) {
+  static async validateProduct(req, res, next) {
     const { product_id: productId } = req.params;
     const fields = validationResult(req).mapped();
     const errorObj = ValidateProduct.validateProductFields(fields);
@@ -25,17 +25,20 @@ class ValidateProduct {
       return ResponseHandler.badRequest(errorObj, res);
     }
 
-    const productExists = await ValidateProduct.productExists(productId);
-    if (productExists) {
-      req.productDetails = productExists;
-      return next();
+    if (!req.path.endsWith('search')) {
+      const productExists = await ValidateProduct.productExists(productId);
+      if (productExists) {
+        req.productDetails = productExists;
+        return next();
+      }
+      const error = {
+        code: 'PRD_02',
+        message: "Don't exist product with this ID.",
+        field: 'product_id'
+      };
+      return ResponseHandler.badRequest(error, res);
     }
-    const error = {
-      code: 'PRD_02',
-      message: "Don't exist product with this ID.",
-      field: 'product_id'
-    };
-    return ResponseHandler.badRequest(error, res);
+    return next();
   }
 
   /**

@@ -1,7 +1,7 @@
 import express from 'express';
 import { ShippingController } from '../controllers';
 import { ValidateShipping } from '../middlewares';
-import Validator from '../helpers/validators/validators';
+import Validator from '../helpers/validators/fieldValidators';
 
 const shippingDetailsRoute = express.Router();
 

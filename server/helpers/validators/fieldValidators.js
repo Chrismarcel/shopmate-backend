@@ -19,18 +19,32 @@ const Validators = {
       .withMessage('The field of order is not allow sorting.')
   ],
 
-  validateLimit: () => [
-    check('limit')
-      .optional()
-      .isNumeric()
-      .withMessage('The limit must be a number.')
-  ],
-
-  validatePage: () => [
+  validatePaginationParams: () => [
     check('page')
       .optional()
       .isNumeric()
-      .withMessage('The page must be a number.')
+      .withMessage('The page must be a number.'),
+
+    check('limit')
+      .optional()
+      .isNumeric()
+      .withMessage('The limit must be a number.'),
+
+    check('description_length')
+      .optional()
+      .isNumeric()
+      .withMessage('The description length must be a number.')
+  ],
+
+  validateSearchQuery: () => [
+    check('query_string')
+      .exists()
+      .withMessage('required'),
+
+    check('all_words')
+      .optional()
+      .isIn(['on', 'off'])
+      .withMessage('Field is invalid, should be on|off ')
   ]
 };
 

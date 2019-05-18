@@ -1,7 +1,7 @@
 import express from 'express';
 import { TaxController } from '../controllers';
 import { ValidateTax } from '../middlewares';
-import Validator from '../helpers/validators/validators';
+import Validator from '../helpers/validators/fieldValidators';
 
 const taxRoute = express.Router();
 

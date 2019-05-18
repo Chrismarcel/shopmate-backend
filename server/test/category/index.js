@@ -1,1 +1,3 @@
-import './getCategories';
+import './getCategories.spec';
+import './getCategoryProducts.spec';
+import './getCategoriesInDepartment.spec';

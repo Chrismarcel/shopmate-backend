@@ -28,14 +28,14 @@ class CategoryController {
     try {
       const getCountQuery = await dbQuery('SELECT COUNT(*) AS count FROM category');
       const { count } = getCountQuery[0];
-      const getCategoriesQuery = `
-      SELECT * 
-      FROM category 
-      ORDER BY ${sortField} ${sortDirection} 
-      LIMIT ${totalLimit} 
-      OFFSET ${(page - 1) * totalLimit}
-      `;
-      const rows = await dbQuery(getCategoriesQuery);
+      const getCategoriesQuery = 'SELECT * FROM category ORDER BY ? ? LIMIT ? OFFSET ?';
+      const offset = (page - 1) * totalLimit;
+      const rows = await dbQuery(getCategoriesQuery, [
+        sortField,
+        sortDirection,
+        totalLimit,
+        offset
+      ]);
 
       return ResponseHandler.success({ count, rows }, res);
     } catch (error) {
