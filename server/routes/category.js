@@ -6,7 +6,7 @@ import Validator from '../helpers/validators/validators';
 const categoryRoute = express.Router();
 
 categoryRoute.get('/categories',
-  Validator.validateSortOrder('order',
+  Validator.validateSortParams('order',
     [
       'name,ASC',
       'name,DESC',
