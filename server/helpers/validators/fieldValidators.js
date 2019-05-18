@@ -1,8 +1,8 @@
-import { check } from 'express-validator/check';
+import { body, query, param } from 'express-validator/check';
 
 const Validators = {
   validateId: (field, required = true) => [
-    check(field)
+    param(field)
       .optional()
       .custom(fieldValue => required || !Number(fieldValue))
       .withMessage('required')
@@ -11,7 +11,7 @@ const Validators = {
   ],
 
   validateSortParams: (field, sortList, allowedFieldsList) => [
-    check(field)
+    query(field)
       .optional({ checkFalsy: true, nullable: true })
       .isIn(sortList)
       .withMessage("The order is not matched 'field,(DESC|ASC).'")
@@ -20,31 +20,43 @@ const Validators = {
   ],
 
   validatePaginationParams: () => [
-    check('page')
+    query('page')
       .optional()
       .isNumeric()
       .withMessage('The page must be a number.'),
 
-    check('limit')
+    query('limit')
       .optional()
       .isNumeric()
       .withMessage('The limit must be a number.'),
 
-    check('description_length')
+    query('description_length')
       .optional()
       .isNumeric()
       .withMessage('The description length must be a number.')
   ],
 
   validateSearchQuery: () => [
-    check('query_string')
+    query('query_string')
       .exists()
       .withMessage('required'),
 
-    check('all_words')
+    query('all_words')
       .optional()
       .isIn(['on', 'off'])
       .withMessage('Field is invalid, should be on|off ')
+  ],
+
+  validateReviewBody: () => [
+    body('review')
+      .exists()
+      .withMessage('empty'),
+
+    body('rating')
+      .exists()
+      .withMessage('empty')
+      .isInt({ min: 1, max: 5 })
+      .withMessage('Field is invalid, should be integer between 1 to 5')
   ]
 };
 

@@ -51,6 +51,16 @@ class ValidateProduct {
     const genericErrors = FieldValidation.validateField(fields, 'PRD_01');
 
     if (genericErrors) {
+      if (genericErrors.message === 'empty') {
+        genericErrors.message = `The field ${genericErrors.field} is empty`;
+        genericErrors.code = 'PRD_03';
+        genericErrors.field = genericErrors.field;
+      }
+
+      if (genericErrors.field === 'rating') {
+        genericErrors.code = 'PRD_04';
+        genericErrors.field = genericErrors.field;
+      }
       return genericErrors;
     }
 
