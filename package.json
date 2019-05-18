@@ -10,7 +10,7 @@
     "build": "rm -rf dist && mkdir dist && babel -d ./dist ./server -s",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm run build",
-    "test": "nyc mocha --require @babel/polyfill --require @babel/register ./server/test/index.js --timeout 10000 --exit",
+    "test": "nyc --reporter=html --reporter=text mocha --require @babel/polyfill --require @babel/register ./server/test/index.js --timeout 10000 --exit",
     "lint": "eslint ./server --fix"
   },
   "repository": {

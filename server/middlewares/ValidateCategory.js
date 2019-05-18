@@ -25,6 +25,15 @@ class ValidateCategory {
       return ResponseHandler.badRequest(errorObj, res);
     }
 
+    if (!categoryId) {
+      return ResponseHandler.badRequest({
+        code: 'CAT_01',
+        message: 'The field is required',
+        field: 'category_id'
+      },
+      res);
+    }
+
     const categoryExists = await ValidateCategory.categoryExists(categoryId);
     if (categoryExists) {
       req.categoryDetails = { category_id: categoryId, ...categoryExists[0] };
@@ -57,26 +66,6 @@ class ValidateCategory {
       }
       return ResponseHandler.badRequest(errorObj, res);
     }
-    return next();
-  }
-
-  /**
-   * @method validateProductId
-   * @description Validates product id
-   * @param {object} req - The request object
-   * @param {object} res - The response object
-   * @param {callback} next - Callback method
-   * @returns {object} - Response error object
-   */
-  static validateProductId(req, res, next) {
-    const { product_id: productId } = req.params;
-    const fields = validationResult(req).mapped();
-    const errorObj = ValidateCategory.validateCategoryFields(fields);
-
-    if (Object.keys(errorObj).length) {
-      return ResponseHandler.badRequest(errorObj, res);
-    }
-    req.productId = productId;
     return next();
   }
 

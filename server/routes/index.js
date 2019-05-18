@@ -6,6 +6,7 @@ import taxRoute from './tax';
 import categoryRoute from './category';
 import attributeRoute from './attributes';
 import shippingDetailsRoute from './shipping';
+import productRoute from './product';
 
 const router = express.Router();
 
@@ -15,5 +16,6 @@ router.use(taxRoute);
 router.use(categoryRoute);
 router.use(attributeRoute);
 router.use(shippingDetailsRoute);
+router.use(productRoute);
 
 export default router;

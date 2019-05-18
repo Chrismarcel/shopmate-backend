@@ -1,7 +1,7 @@
 import express from 'express';
 import { DepartmentController } from '../controllers';
 import { ValidateDepartment } from '../middlewares';
-import Validator from '../helpers/validators/validators';
+import Validator from '../helpers/validators/fieldValidators';
 
 const departmentRoute = express.Router();
 

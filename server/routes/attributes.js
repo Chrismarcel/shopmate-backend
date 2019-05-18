@@ -1,7 +1,7 @@
 import express from 'express';
 import { AttributeController } from '../controllers';
-import { ValidateAttribute, ValidateCategory } from '../middlewares';
-import Validator from '../helpers/validators/validators';
+import { ValidateAttribute, ValidateProduct } from '../middlewares';
+import Validator from '../helpers/validators/fieldValidators';
 
 const attributesRoute = express.Router();
 
@@ -19,7 +19,7 @@ attributesRoute.get('/attributes/values/:attribute_id',
 
 attributesRoute.get('/attributes/inProduct/:product_id',
   Validator.validateId('product_id'),
-  ValidateCategory.validateProductId,
+  ValidateProduct.validateProduct,
   AttributeController.getAttributesInProduct);
 
 export default attributesRoute;

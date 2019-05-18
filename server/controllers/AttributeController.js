@@ -53,7 +53,8 @@ class AttributeController {
    * @returns {object} - Response object
    */
   static async getAttributesInProduct(req, res) {
-    const { productId } = req;
+    const { productDetails } = req;
+    const { product_id: productId } = productDetails;
     try {
       const getProducts = await dbQuery('CALL catalog_get_product_attributes(?)', productId);
       return ResponseHandler.success(getProducts[0], res);

@@ -59,7 +59,7 @@ describe('Test get a single attribute endpoint GET /attribute/:attribute_id', ()
   });
 });
 
-describe('Test get a single attribute vakues endpoint GET /attribute/values/:attribute_id', () => {
+describe('Test get a single attribute values endpoint GET /attribute/values/:attribute_id', () => {
   it('should return 200 if atrribute values were returned successfully', (done) => {
     chai
       .request(app)
@@ -94,35 +94,6 @@ describe('Test get a single attribute vakues endpoint GET /attribute/values/:att
         expect(res.status).to.equal(400);
         expect(error.code).to.equal('ATT_02');
         expect(error.message).to.equal("Don't exist attribute with this ID.");
-        done(err);
-      });
-  });
-});
-
-describe('Test get attribues in a product endpoint GET /attributes/inProduct/:product_id', () => {
-  it('should return 200 if products were returned successfully', (done) => {
-    chai
-      .request(app)
-      .get('/attributes/inProduct/1')
-      .end((err, res) => {
-        expect(res.status).to.equal(200);
-        expect(res.body[0]).to.have.property('attribute_name');
-        expect(res.body[0]).to.have.property('attribute_value_id');
-        expect(res.body[0]).to.have.property('attribute_value');
-        done(err);
-      });
-  });
-
-  it('should return 400 if category id is not a number', (done) => {
-    chai
-      .request(app)
-      .get('/attributes/inProduct/ab')
-      .end((err, res) => {
-        const { error } = res.body;
-        expect(res.status).to.equal(400);
-        expect(error.code).to.equal('CAT_02');
-        expect(error.field).to.equal('product_id');
-        expect(error.message).to.equal('The ID is not a number.');
         done(err);
       });
   });
