@@ -142,7 +142,7 @@ class ValidateCustomer {
    */
   static async updateAddressDetails(req, res, next) {
     const fields = validationResult(req).mapped();
-    const errorObj = ValidateCustomer.validateUserFields(fields, 'USR-09');
+    const errorObj = ValidateCustomer.validateUserFields(fields, 'USR_09');
     if (Object.keys(errorObj).length) {
       return ResponseHandler.badRequest(errorObj, res);
     }

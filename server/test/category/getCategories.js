@@ -49,7 +49,7 @@ describe('Test get a single category endpoint GET /categories/:category_id', () 
   it("should return 400 if category doesn't exist", (done) => {
     chai
       .request(app)
-      .get('/categories/10000')
+      .get('/categories/0')
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);

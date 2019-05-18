@@ -48,7 +48,7 @@ describe('Test get a single attribute endpoint GET /attribute/:attribute_id', ()
   it("should return 400 if attribute doesn't exist", (done) => {
     chai
       .request(app)
-      .get('/attributes/10000')
+      .get('/attributes/0')
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
@@ -88,7 +88,7 @@ describe('Test get a single attribute vakues endpoint GET /attribute/values/:att
   it("should return 400 if attribute doesn't exist", (done) => {
     chai
       .request(app)
-      .get('/attributes/values/10000')
+      .get('/attributes/values/0')
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);

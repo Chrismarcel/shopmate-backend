@@ -55,7 +55,7 @@ class ValidateTax {
   }
 
   /**
-   * @method TaxExists
+   * @method taxExists
    * @description Validates if a specific tax exists
    * @param {string} taxId - Fields specified in request param
    * @returns {boolean} - If tax exists or not

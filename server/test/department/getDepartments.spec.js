@@ -48,7 +48,7 @@ describe('Test get a single department endpoint GET /departments/:department_id'
   it("should return 400 if department doesn't exist", (done) => {
     chai
       .request(app)
-      .get('/departments/10000')
+      .get('/departments/0')
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
