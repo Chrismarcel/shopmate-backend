@@ -10,7 +10,7 @@ const Validators = {
       .withMessage('The ID is not a number.')
   ],
 
-  validateSortOrder: (field, sortList, allowedFieldsList) => [
+  validateSortParams: (field, sortList, allowedFieldsList) => [
     check(field)
       .optional({ checkFalsy: true, nullable: true })
       .isIn(sortList)
