@@ -55,7 +55,7 @@ class ProductController {
    * @param {object} res - The response object
    * @returns {object} - Response object
    */
-  static async searchProduct(req, res) {
+  static async searchProducts(req, res) {
     const { query } = req;
     try {
       const {
@@ -75,15 +75,56 @@ class ProductController {
 
       const offset = (page - 1) * totalLimit;
 
-      const productDetails = await dbQuery('CALL catalog_search(?, ?, ?, ?, ?)', [
+      const getProductDetails = await dbQuery('CALL catalog_search(?, ?, ?, ?, ?)', [
         queryString,
         allWords,
         descriptionLength,
         totalLimit,
         offset
       ]);
-      const rows = productDetails[0];
+      const rows = getProductDetails[0];
 
+      return ResponseHandler.success({ count, rows }, res);
+    } catch (error) {
+      return ResponseHandler.serverError(res);
+    }
+  }
+
+  /**
+   * @method getSpecificProducts
+   * @description Method to get all products from specific column
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} - Response object
+   */
+  static async getSpecificProducts(req, res) {
+    const { categoryDetails, departmentDetails, query } = req;
+    const columnId = categoryDetails
+      ? categoryDetails.category_id
+      : departmentDetails.department_id;
+    let storedProcedure = 'catalog_get_products_in_category';
+    let getRowCount = 'catalog_count_products_in_category';
+
+    if (departmentDetails) {
+      storedProcedure = 'catalog_get_products_on_department';
+      getRowCount = 'catalog_count_products_on_department';
+    }
+
+    const { limit = 0, page = 1, description_length: descriptionLength = 200 } = query;
+    const totalLimit = Number(limit) || 20;
+
+    try {
+      const getProductsCount = await dbQuery(`CALL ${getRowCount}(?)`, [columnId]);
+      const count = Object.values(getProductsCount[0][0])[0];
+
+      const offset = (page - 1) * totalLimit;
+      const getProductsInCategory = await dbQuery(`CALL ${storedProcedure}(?, ?, ?, ?)`, [
+        columnId,
+        descriptionLength,
+        totalLimit,
+        offset
+      ]);
+      const rows = getProductsInCategory[0];
       return ResponseHandler.success({ count, rows }, res);
     } catch (error) {
       return ResponseHandler.serverError(res);

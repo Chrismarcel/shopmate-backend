@@ -25,6 +25,15 @@ class ValidateCategory {
       return ResponseHandler.badRequest(errorObj, res);
     }
 
+    if (!categoryId) {
+      return ResponseHandler.badRequest({
+        code: 'CAT_01',
+        message: 'The field is required',
+        field: 'category_id'
+      },
+      res);
+    }
+
     const categoryExists = await ValidateCategory.categoryExists(categoryId);
     if (categoryExists) {
       req.categoryDetails = { category_id: categoryId, ...categoryExists[0] };
