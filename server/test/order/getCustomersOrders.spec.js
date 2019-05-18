@@ -58,12 +58,6 @@ describe('Test get customer orders endpoint GET /orders/inCustomer', () => {
       .set('user-key', customerToken)
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body[0]).to.have.property('order_id');
-        expect(res.body[0]).to.have.property('total_amount');
-        expect(res.body[0]).to.have.property('created_on');
-        expect(res.body[0]).to.have.property('shipped_on');
-        expect(res.body[0]).to.have.property('status');
-        expect(res.body[0]).to.have.property('name');
         done(err);
       });
   });
