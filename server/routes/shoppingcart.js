@@ -7,6 +7,11 @@ const shoppingRoute = express.Router();
 
 shoppingRoute.get('/shoppingcart/generateUniqueId', ShoppingCartController.generateCartId);
 
+shoppingRoute.get('/shoppingcart/:cart_id',
+  Validator.validateCartId(),
+  ValidateShoppingCart.validateShoppingCart,
+  ShoppingCartController.getItemsInCart);
+
 shoppingRoute.post('/shoppingcart/add',
   Validator.validateAddToCartFields(),
   ValidateShoppingCart.validateShoppingCart,

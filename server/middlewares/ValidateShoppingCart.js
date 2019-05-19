@@ -34,7 +34,7 @@ class ValidateShoppingCart {
 
     const shoppingCartExists = await ValidateShoppingCart.shoppingCartExists(cartId);
 
-    if (req.method.toLowerCase() === 'get' && !shoppingCartExists) {
+    if (req.params.cart_id && !shoppingCartExists) {
       const error = {
         code: 'CRT_02',
         message: "Don't exist cart with this ID.",
@@ -43,9 +43,7 @@ class ValidateShoppingCart {
       return ResponseHandler.badRequest(error, res);
     }
 
-    if (shoppingCartExists) {
-      req.shoppingCartDetails = shoppingCartExists;
-    }
+    req.shoppingCartDetails = shoppingCartExists;
     return next();
   }
 
@@ -75,7 +73,7 @@ class ValidateShoppingCart {
    */
   static async shoppingCartExists(cartId) {
     const shoppingCartDetails = await dbQuery('CALL shopping_cart_get_products(?)', cartId);
-    if (shoppingCartDetails.length) {
+    if (shoppingCartDetails[0].length) {
       return shoppingCartDetails[0];
     }
 

@@ -91,6 +91,12 @@ const Validators = {
     body('attributes')
       .exists()
       .withMessage('empty')
+  ],
+
+  validateCartId: () => [
+    param('cart_id')
+      .exists()
+      .withMessage('empty')
   ]
 };
 

@@ -11,21 +11,15 @@ dotenv.config();
  */
 class ShoppingCartController {
   /**
-   * @method getAllShoppingCart
-   * @description Method to get all taxes from the database
+   * @method getItemsInCart
+   * @description Method to get all items in cart
    * @param {object} req - The request object
    * @param {object} res - The response object
    * @returns {object} - Response object
    */
-  static async getAllShoppingCart(req, res) {
-    try {
-      const shoppingCartDetails = await dbQuery('SELECT * FROM tax');
-      const taxData = shoppingCartDetails;
-
-      return ResponseHandler.success(taxData, res);
-    } catch (error) {
-      return ResponseHandler.serverError(res);
-    }
+  static async getItemsInCart(req, res) {
+    const { shoppingCartDetails: cartItems } = req;
+    return ResponseHandler.success(cartItems, res);
   }
 
   /**
