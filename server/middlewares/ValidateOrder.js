@@ -17,7 +17,7 @@ class ValidateOrder {
    * @param {callback} next - Callback method
    * @returns {object} - JSON response object
    */
-  static async validateOrderId(req, res, next) {
+  static async validateOrder(req, res, next) {
     const { order_id: orderId } = req.params;
     const fields = validationResult(req).mapped();
     const errorObj = ValidateOrder.validateOrderFields(fields);
@@ -25,8 +25,10 @@ class ValidateOrder {
       return ResponseHandler.badRequest(errorObj, res);
     }
 
-    const getOrderDetails = await dbQuery('CALL orders_get_order_details(?)', orderId);
-    [req.orderDetails] = getOrderDetails;
+    if (req.params.order_id) {
+      const getOrderDetails = await dbQuery('CALL orders_get_order_details(?)', orderId);
+      [req.orderDetails] = getOrderDetails;
+    }
     return next();
   }
 
@@ -40,6 +42,15 @@ class ValidateOrder {
     const genericErrors = FieldValidation.validateField(fields, 'ORD_01');
 
     if (genericErrors) {
+      if (genericErrors.message === 'empty') {
+        genericErrors.message = `The field ${genericErrors.field} is empty`;
+        genericErrors.code = 'ORD_02';
+        genericErrors.field = genericErrors.field;
+      }
+      if (genericErrors.field === 'shipping_id' || genericErrors.field === 'tax_id') {
+        genericErrors.code = 'ORD_03';
+        genericErrors.field = genericErrors.field;
+      }
       return genericErrors;
     }
 

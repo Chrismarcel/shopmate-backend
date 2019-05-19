@@ -57,6 +57,24 @@ const Validators = {
       .withMessage('empty')
       .isInt({ min: 1, max: 5 })
       .withMessage('Field is invalid, should be integer between 1 to 5')
+  ],
+
+  validateOrderFields: () => [
+    body('cart_id')
+      .exists()
+      .withMessage('empty'),
+
+    body('shipping_id')
+      .exists()
+      .withMessage('empty')
+      .isInt()
+      .withMessage('Shipping ID should be a number'),
+
+    body('tax_id')
+      .exists()
+      .withMessage('empty')
+      .isInt()
+      .withMessage('Tax ID should be a number')
   ]
 };
 
