@@ -67,13 +67,13 @@ const Validators = {
     body('shipping_id')
       .exists()
       .withMessage('empty')
-      .isInt()
+      .isInt({ min: 0 })
       .withMessage('Shipping ID should be a number'),
 
     body('tax_id')
       .exists()
       .withMessage('empty')
-      .isInt()
+      .isInt({ min: 0 })
       .withMessage('Tax ID should be a number')
   ],
 
@@ -85,8 +85,8 @@ const Validators = {
     body('product_id')
       .exists()
       .withMessage('empty')
-      .isInt()
-      .withMessage('The product ID is not a number'),
+      .isInt({ min: 0 })
+      .withMessage('Product ID should be a number'),
 
     body('attributes')
       .exists()
@@ -97,6 +97,20 @@ const Validators = {
     param('cart_id')
       .exists()
       .withMessage('empty')
+  ],
+
+  validateUpdateCartFields: () => [
+    param('item_id')
+      .exists()
+      .withMessage('empty')
+      .isInt({ min: 0 })
+      .withMessage('Item ID should be a number'),
+
+    body('quantity')
+      .exists()
+      .withMessage('empty')
+      .isInt({ min: 0 })
+      .withMessage('Quantity should be a number')
   ]
 };
 

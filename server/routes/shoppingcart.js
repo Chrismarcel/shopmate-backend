@@ -7,10 +7,15 @@ const shoppingRoute = express.Router();
 
 shoppingRoute.get('/shoppingcart/generateUniqueId', ShoppingCartController.generateCartId);
 
-shoppingRoute.get('/shoppingcart/:cart_id',
+shoppingRoute.get('/shoppingcart/:cart_id?',
   Validator.validateCartId(),
   ValidateShoppingCart.validateShoppingCart,
   ShoppingCartController.getItemsInCart);
+
+shoppingRoute.put('/shoppingcart/update/:item_id?',
+  Validator.validateUpdateCartFields(),
+  ValidateShoppingCart.validateShoppingCart,
+  ShoppingCartController.updateCart);
 
 shoppingRoute.post('/shoppingcart/add',
   Validator.validateAddToCartFields(),

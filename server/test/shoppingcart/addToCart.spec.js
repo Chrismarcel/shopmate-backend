@@ -94,7 +94,7 @@ describe('Test add to cart endpoint POST /shoppingcart/add', () => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
         expect(error.code).to.equal('PRD_01');
-        expect(error.message).to.equal('The product ID is not a number');
+        expect(error.message).to.equal('Product ID should be a number');
         expect(error.field).to.equal('product_id');
         done(err);
       });

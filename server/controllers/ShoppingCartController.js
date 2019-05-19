@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import dbQuery from '../database/dbconnection';
-import { ResponseHandler, HelperUtils } from '../helpers';
+import { ResponseHandler, HelperUtils, CustomQueries } from '../helpers';
 
 dotenv.config();
 
@@ -38,6 +38,28 @@ class ShoppingCartController {
       const shoppingCartDetails = await dbQuery('CALL shopping_cart_get_products(?)', cartId);
 
       return ResponseHandler.success(shoppingCartDetails[0], res);
+    } catch (error) {
+      return ResponseHandler.serverError(res);
+    }
+  }
+
+  /**
+   * @method updateCart
+   * @description Method to uodate an existing item in the cart
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} - Response object
+   */
+  static async updateCart(req, res) {
+    const { item_id: itemId, cart_id: cartId, product_id: productId } = req.shoppingCartDetails[0];
+    const { quantity } = req.body;
+
+    try {
+      await dbQuery('CALL shopping_cart_update(?, ?)', [itemId, quantity]);
+      const getItemDetails = await dbQuery(CustomQueries.getCartItemDetails, cartId);
+      delete getItemDetails[0].image;
+      getItemDetails[0].product_id = productId;
+      return ResponseHandler.success(getItemDetails, res);
     } catch (error) {
       return ResponseHandler.serverError(res);
     }
