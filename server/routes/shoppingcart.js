@@ -12,6 +12,11 @@ shoppingRoute.get('/shoppingcart/moveToCart/:item_id?',
   ValidateShoppingCart.validateShoppingCart,
   ShoppingCartController.moveItemToCart);
 
+shoppingRoute.get('/shoppingcart/totalAmount/:cart_id?',
+  Validator.validateCartId(),
+  ValidateShoppingCart.validateShoppingCart,
+  ShoppingCartController.getTotalAmount);
+
 shoppingRoute.get('/shoppingcart/:cart_id?',
   Validator.validateCartId(),
   ValidateShoppingCart.validateShoppingCart,

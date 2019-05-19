@@ -78,7 +78,7 @@ class ShoppingCartController {
       await dbQuery('CALL shopping_cart_empty(?)', cartId);
       return ResponseHandler.success([], res);
     } catch (error) {
-      return ResponseHandler.ser([], res);
+      return ResponseHandler.serverError(res);
     }
   }
 
@@ -95,7 +95,24 @@ class ShoppingCartController {
       await dbQuery('CALL shopping_cart_move_product_to_cart(?)', itemId);
       return ResponseHandler.success([], res);
     } catch (error) {
-      return ResponseHandler.ser([], res);
+      return ResponseHandler.serverError(res);
+    }
+  }
+
+  /**
+   * @method getTotalAmount
+   * @description - Get total amount of all items in a cart
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} - Response object
+   */
+  static async getTotalAmount(req, res) {
+    const { cart_id: cartId } = req.params;
+    try {
+      const getTotalAmount = await dbQuery('CALL shopping_cart_get_total_amount(?)', cartId);
+      return ResponseHandler.success(getTotalAmount[0][0], res);
+    } catch (error) {
+      return ResponseHandler.serverError(res);
     }
   }
 
