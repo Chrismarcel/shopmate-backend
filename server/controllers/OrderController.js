@@ -12,7 +12,7 @@ dotenv.config();
 class OrderController {
   /**
    * @method getCustomerOrders
-   * @description Method to get a single tax from the database
+   * @description Method to get a customer's orders from the database
    * @param {object} req - The request object
    * @param {object} res - The response object
    * @returns {object} - Response object
@@ -29,7 +29,7 @@ class OrderController {
 
   /**
    * @method getOrderWithId
-   * @description Method to get a single tax from the database
+   * @description Method to get a single order from the database
    * @param {object} req - The request object
    * @param {object} res - The response object
    * @returns {object} - Response object
@@ -41,7 +41,7 @@ class OrderController {
 
   /**
    * @method getOrderShortDetails
-   * @description Method to get a single tax from the database
+   * @description Method to get details of an order from the database
    * @param {object} req - The request object
    * @param {object} res - The response object
    * @returns {object} - Response object
@@ -51,6 +51,29 @@ class OrderController {
     try {
       const getOrderDetails = await dbQuery('CALL orders_get_order_short_details(?)', orderId);
       return ResponseHandler.success(getOrderDetails[0], res);
+    } catch (error) {
+      return ResponseHandler.serverError(res);
+    }
+  }
+
+  /**
+   * @method postOrder
+   * @description Method to post an order to the database
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} - Response object
+   */
+  static async postOrder(req, res) {
+    const { cart_id: cartId, shipping_id: shippingId, tax_id: taxId } = req.body;
+    const { customer_id: customerId } = req.customerData;
+    try {
+      const createOrder = await dbQuery('CALL shopping_cart_create_order(?, ?, ?, ?)', [
+        cartId,
+        customerId,
+        shippingId,
+        taxId
+      ]);
+      return ResponseHandler.success(createOrder[0][0], res);
     } catch (error) {
       return ResponseHandler.serverError(res);
     }

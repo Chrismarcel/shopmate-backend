@@ -12,13 +12,19 @@ orderRoute.get('/orders/inCustomer',
 orderRoute.get('/orders/:order_id',
   AuthenticateUser.verifyUser,
   Validator.validateId('order_id'),
-  ValidateOrder.validateOrderId,
+  ValidateOrder.validateOrder,
   OrderController.getOrderWithId);
 
 orderRoute.get('/orders/shortDetails/:order_id',
   AuthenticateUser.verifyUser,
   Validator.validateId('order_id'),
-  ValidateOrder.validateOrderId,
+  ValidateOrder.validateOrder,
   OrderController.getOrderShortDetails);
+
+orderRoute.post('/orders',
+  AuthenticateUser.verifyUser,
+  Validator.validateOrderFields(),
+  ValidateOrder.validateOrder,
+  OrderController.postOrder);
 
 export default orderRoute;
