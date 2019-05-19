@@ -66,6 +66,23 @@ class ShoppingCartController {
   }
 
   /**
+   * @method emptyCart
+   * @description Method to remove all items in cart
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} - Response object
+   */
+  static async emptyCart(req, res) {
+    const { cart_id: cartId } = req.params;
+    try {
+      await dbQuery('CALL shopping_cart_empty(?)', cartId);
+      return ResponseHandler.success([], res);
+    } catch (error) {
+      return ResponseHandler.serverError([], res);
+    }
+  }
+
+  /**
    * @method generateCartId
    * @description Method to generate a unique cart id
    * @param {object} req - The request object

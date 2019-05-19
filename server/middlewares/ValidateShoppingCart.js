@@ -32,7 +32,7 @@ class ValidateShoppingCart {
       return ResponseHandler.badRequest(errorObj, res);
     }
 
-    const handleQueryResults = ValidateShoppingCart.handleQueryResults(req);
+    const handleQueryResults = ValidateShoppingCart.handleQueryResults(req) || next();
     const queryResult = await handleQueryResults(columnId);
 
     if (queryResult[0].code) {
@@ -77,7 +77,12 @@ class ValidateShoppingCart {
     if (req.params.item_id) {
       return ValidateShoppingCart.cartItemExists;
     }
-    return ValidateShoppingCart.shoppingCartExists;
+
+    if (req.method.toLowerCase() !== 'post') {
+      return ValidateShoppingCart.shoppingCartExists;
+    }
+
+    return false;
   }
 
   /**

@@ -12,6 +12,11 @@ shoppingRoute.get('/shoppingcart/:cart_id?',
   ValidateShoppingCart.validateShoppingCart,
   ShoppingCartController.getItemsInCart);
 
+shoppingRoute.delete('/shoppingcart/:cart_id?',
+  Validator.validateCartId(),
+  ValidateShoppingCart.validateShoppingCart,
+  ShoppingCartController.emptyCart);
+
 shoppingRoute.put('/shoppingcart/update/:item_id?',
   Validator.validateUpdateCartFields(),
   ValidateShoppingCart.validateShoppingCart,
