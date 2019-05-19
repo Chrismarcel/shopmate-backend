@@ -117,6 +117,23 @@ class ShoppingCartController {
   }
 
   /**
+   * @method getSavedItems
+   * @description Method to get saved items
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} - Response object
+   */
+  static async getSavedItems(req, res) {
+    const { cart_id: cartId } = req.params;
+    try {
+      const getSavedItems = await dbQuery('CALL shopping_cart_get_saved_products(?)', cartId);
+      return ResponseHandler.success(getSavedItems[0][0], res);
+    } catch (error) {
+      return ResponseHandler.serverError(res);
+    }
+  }
+
+  /**
    * @method getTotalAmount
    * @description - Get total amount of all items in a cart
    * @param {object} req - The request object
