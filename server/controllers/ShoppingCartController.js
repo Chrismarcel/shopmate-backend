@@ -100,6 +100,23 @@ class ShoppingCartController {
   }
 
   /**
+   * @method saveForLater
+   * @description Method to save cart for later
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} - Response object
+   */
+  static async saveForLater(req, res) {
+    const { item_id: itemId } = req.params;
+    try {
+      await dbQuery('CALL shopping_cart_save_product_for_later(?)', itemId);
+      return ResponseHandler.success([], res);
+    } catch (error) {
+      return ResponseHandler.serverError(res);
+    }
+  }
+
+  /**
    * @method getTotalAmount
    * @description - Get total amount of all items in a cart
    * @param {object} req - The request object
