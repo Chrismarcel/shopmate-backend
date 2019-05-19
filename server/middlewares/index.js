@@ -8,6 +8,7 @@ import ValidateAttribute from './ValidateAttribute';
 import ValidateShipping from './ValidateShipping';
 import ValidateProduct from './ValidateProduct';
 import ValidateOrder from './ValidateOrder';
+import ValidateShoppingCart from './ValidateShoppingCart';
 
 export {
   AuthenticateUser,
@@ -19,5 +20,6 @@ export {
   ValidateAttribute,
   ValidateShipping,
   ValidateProduct,
-  ValidateOrder
+  ValidateOrder,
+  ValidateShoppingCart
 };

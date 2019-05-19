@@ -18,9 +18,10 @@ class ValidateProduct {
    * @returns {object} - JSON response object
    */
   static async validateProduct(req, res, next) {
-    const { product_id: productId } = req.params;
+    const productId = req.params.product_id || req.body.product_id;
     const fields = validationResult(req).mapped();
     const errorObj = ValidateProduct.validateProductFields(fields);
+
     if (Object.keys(errorObj).length) {
       return ResponseHandler.badRequest(errorObj, res);
     }
@@ -74,9 +75,9 @@ class ValidateProduct {
    * @returns {boolean} - If product exists or not
    */
   static async productExists(productId) {
-    const productDetails = await dbQuery('SELECT * FROM product WHERE product_id = ?', productId);
-    if (productDetails.length) {
-      return productDetails[0];
+    const productDetails = await dbQuery('CALL catalog_get_product_info(?)', productId);
+    if (productDetails[0].length) {
+      return productDetails[0][0];
     }
     return false;
   }

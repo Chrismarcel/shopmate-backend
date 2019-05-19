@@ -7,3 +7,4 @@ import './attribute';
 import './shipping';
 import './product';
 import './order';
+import './shoppingcart';

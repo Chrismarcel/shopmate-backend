@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import dbQuery from '../database/dbconnection';
-import { ResponseHandler } from '../helpers';
+import { ResponseHandler, CustomQueries } from '../helpers';
 
 dotenv.config();
 
@@ -25,16 +25,9 @@ class ProductController {
       const getProductsCount = await dbQuery('SELECT COUNT(*) AS count FROM product');
       const { count } = getProductsCount[0];
 
-      const getProductsQuery = `
-      SELECT *,
-      IF (LENGTH(description) > ?, 
-      CONCAT(SUBSTR(description, 1, ?), '...'),
-      description) as description 
-      FROM product LIMIT ? OFFSET ?`;
-
       const offset = (page - 1) * totalLimit;
 
-      const productDetails = await dbQuery(getProductsQuery, [
+      const productDetails = await dbQuery(CustomQueries.getProductDetails, [
         descriptionLength,
         descriptionLength,
         totalLimit,
