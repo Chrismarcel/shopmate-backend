@@ -16,6 +16,7 @@ describe('Test add to cart endpoint POST /shoppingcart/add', () => {
         attributes: 'Green, Red'
       })
       .end((err, res) => {
+        global.cartItemId = res.body[0].item_id;
         expect(res.status).to.equal(200);
         expect(res.body[0]).to.have.property('name');
         expect(res.body[0]).to.have.property('quantity');

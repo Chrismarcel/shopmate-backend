@@ -32,15 +32,17 @@ class ValidateShoppingCart {
       return ResponseHandler.badRequest(errorObj, res);
     }
 
-    const handleQueryResults = ValidateShoppingCart.handleQueryResults(req) || next();
-    const queryResult = await handleQueryResults(columnId);
+    const handleQueryResults = ValidateShoppingCart.handleQueryResults(req);
 
-    if (queryResult[0].code) {
-      const error = queryResult[0];
-      return ResponseHandler.badRequest(error, res);
+    if (handleQueryResults) {
+      const queryResult = await handleQueryResults(columnId);
+      // If no cart found, hence error code exists
+      if (queryResult[0].code) {
+        const error = queryResult[0];
+        return ResponseHandler.badRequest(error, res);
+      }
+      req.shoppingCartDetails = queryResult;
     }
-
-    req.shoppingCartDetails = queryResult;
     return next();
   }
 

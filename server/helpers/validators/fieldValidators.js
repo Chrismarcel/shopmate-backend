@@ -99,6 +99,14 @@ const Validators = {
       .withMessage('empty')
   ],
 
+  validateItemId: () => [
+    param('item_id')
+      .exists()
+      .withMessage('empty')
+      .isInt({ min: 0 })
+      .withMessage('Item ID should be a number')
+  ],
+
   validateUpdateCartFields: () => [
     param('item_id')
       .exists()

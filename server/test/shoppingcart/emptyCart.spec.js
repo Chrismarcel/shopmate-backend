@@ -5,39 +5,22 @@ import app from '../../app';
 
 chai.use(chaiHttp);
 
-describe('generate unique id', () => {
-  it('should generate a unique string', (done) => {
+describe('Test empty cart endpoint DELETE /shoppingcart/:cart_id', () => {
+  it('should return 200 if deletion was successfully', (done) => {
     chai
       .request(app)
-      .get('/shoppingcart/generateUniqueId')
-      .end((err, res) => {
-        expect(res.body.cart_id.length).to.equal(32);
-        done(err);
-      });
-  });
-});
-
-describe('Test get cart items endpoint GET /shoppingcart/:cart_id', () => {
-  it('should return 200 if items were returned successfully', (done) => {
-    chai
-      .request(app)
-      .get('/shoppingcart/bc0c9e95f33f402bd51db6caacec22de')
+      .delete('/shoppingcart/bc0c9e95f33f402bd51db6caacec22de')
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body[0]).to.have.property('name');
-        expect(res.body[0]).to.have.property('quantity');
-        expect(res.body[0]).to.have.property('price');
-        expect(res.body[0]).to.have.property('item_id');
-        expect(res.body[0]).to.have.property('attributes');
-        expect(res.body[0]).to.have.property('subtotal');
+        expect(res.body).to.deep.equal([]);
         done(err);
       });
   });
 
-  it("should return 400 if item with given cart id doesn't exist", (done) => {
+  it("should return 400 if cart id doesn't exist", (done) => {
     chai
       .request(app)
-      .get('/shoppingcart/0')
+      .delete('/shoppingcart/0')
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
@@ -51,7 +34,7 @@ describe('Test get cart items endpoint GET /shoppingcart/:cart_id', () => {
   it('should return 400 if no cart id was specified', (done) => {
     chai
       .request(app)
-      .get('/shoppingcart/')
+      .delete('/shoppingcart/')
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);

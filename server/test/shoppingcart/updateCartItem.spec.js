@@ -5,18 +5,23 @@ import app from '../../app';
 
 chai.use(chaiHttp);
 
+let itemId;
+
 describe('Test update cart item endpoint PUT /shoppingcart/update/item_id', () => {
+  before(() => {
+    itemId = global.cartItemId;
+  });
   it('should return 200 if item was updated successfully', (done) => {
     chai
       .request(app)
-      .put('/shoppingcart/update/553')
+      .put(`/shoppingcart/update/${itemId}`)
       .send({
         quantity: 10
       })
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body[0].quantity).to.equal(10);
-        expect(res.body[0].item_id).to.equal(553);
+        expect(res.body[0].item_id).to.equal(itemId);
         expect(res.body[0]).to.have.property('name');
         expect(res.body[0]).to.have.property('price');
         expect(res.body[0]).to.have.property('item_id');
@@ -63,7 +68,7 @@ describe('Test update cart item endpoint PUT /shoppingcart/update/item_id', () =
   it('should return 400 if quantity is not specified', (done) => {
     chai
       .request(app)
-      .put('/shoppingcart/update/553')
+      .put(`/shoppingcart/update/${itemId}`)
       .send({})
       .end((err, res) => {
         const { error } = res.body;
@@ -78,7 +83,7 @@ describe('Test update cart item endpoint PUT /shoppingcart/update/item_id', () =
   it('should return 400 if quantity is invalid', (done) => {
     chai
       .request(app)
-      .put('/shoppingcart/update/553')
+      .put(`/shoppingcart/update/${itemId}`)
       .send({ quantity: 'bab' })
       .end((err, res) => {
         const { error } = res.body;

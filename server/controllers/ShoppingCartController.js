@@ -78,7 +78,24 @@ class ShoppingCartController {
       await dbQuery('CALL shopping_cart_empty(?)', cartId);
       return ResponseHandler.success([], res);
     } catch (error) {
-      return ResponseHandler.serverError([], res);
+      return ResponseHandler.ser([], res);
+    }
+  }
+
+  /**
+   * @method moveItemToCart
+   * @description Method to move item to cart
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} - Response object
+   */
+  static async moveItemToCart(req, res) {
+    const { item_id: itemId } = req.params;
+    try {
+      await dbQuery('CALL shopping_cart_move_product_to_cart(?)', itemId);
+      return ResponseHandler.success([], res);
+    } catch (error) {
+      return ResponseHandler.ser([], res);
     }
   }
 
