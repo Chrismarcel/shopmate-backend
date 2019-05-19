@@ -52,7 +52,7 @@ class HelperUtils {
   }
 
   /**
-   * @method validatePassword
+   * @method verifyPassword
    * @description Validate a users password
    * @param {string} password The users password
    * @param {string} hashedPassword The hashedPassword
@@ -60,6 +60,15 @@ class HelperUtils {
    */
   static verifyPassword(password, hashedPassword) {
     return HelperUtils.hashPassword(password) === hashedPassword;
+  }
+
+  /**
+   * @method generateUniqueId
+   * @description generates a unique id
+   * @returns {string} The unique id
+   */
+  static generateUniqueId() {
+    return crypto.randomBytes(16).toString('hex');
   }
 }
 

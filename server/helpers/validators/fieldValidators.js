@@ -75,6 +75,22 @@ const Validators = {
       .withMessage('empty')
       .isInt()
       .withMessage('Tax ID should be a number')
+  ],
+
+  validateAddToCartFields: () => [
+    body('cart_id')
+      .exists()
+      .withMessage('empty'),
+
+    body('product_id')
+      .exists()
+      .withMessage('empty')
+      .isInt()
+      .withMessage('The product ID is not a number'),
+
+    body('attributes')
+      .exists()
+      .withMessage('empty')
   ]
 };
 
