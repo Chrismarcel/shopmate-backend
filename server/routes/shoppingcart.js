@@ -17,6 +17,11 @@ shoppingRoute.get('/shoppingcart/saveForLater/:item_id?',
   ValidateShoppingCart.validateShoppingCart,
   ShoppingCartController.saveForLater);
 
+shoppingRoute.delete('/shoppingcart/removeProduct/:item_id?',
+  Validator.validateItemId(),
+  ValidateShoppingCart.validateShoppingCart,
+  ShoppingCartController.removeItemFromCart);
+
 shoppingRoute.get('/shoppingcart/totalAmount/:cart_id?',
   Validator.validateCartId(),
   ValidateShoppingCart.validateShoppingCart,
