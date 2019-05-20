@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
+import { get } from 'axios';
 import dbQuery from '../database/dbconnection';
 import { HelperUtils, ResponseHandler } from '../helpers';
+import ValidateCustomer from '../middlewares/ValidateCustomer';
 
 dotenv.config();
 
@@ -27,8 +29,7 @@ class CustomerController {
         hashedPassword
       ]);
       const userId = registerCustomerQuery[0][0]['LAST_INSERT_ID()'];
-      const customerDetails = await dbQuery('CALL customer_get_customer(?)', userId);
-      const customerData = customerDetails[0][0];
+      const customerData = await CustomerController.fetchCustomer(email);
       delete customerData.password;
       const accessToken = `Bearer ${HelperUtils.generateToken({ userId, email, name })}`;
       ResponseHandler.success({
@@ -50,12 +51,11 @@ class CustomerController {
    * @returns {object} - Response object
    */
   static async loginCustomer(req, res) {
-    const { userId } = req;
+    const { email } = req;
     try {
-      const customerDetails = await dbQuery('CALL customer_get_customer(?)', userId);
-      const customerData = customerDetails[0][0];
+      const customerData = await CustomerController.fetchCustomer(email);
       delete customerData.password;
-      const { name, email } = customerData;
+      const { name, customer_id: userId } = customerData;
       const accessToken = `Bearer ${HelperUtils.generateToken({
         email,
         userId,
@@ -84,9 +84,9 @@ class CustomerController {
     const queryParams = Object.values(customerProfileDetails);
     try {
       await dbQuery('CALL customer_update_account(?, ?, ?, ?, ?, ?, ?)', queryParams);
-      const customerId = queryParams[0];
+      const email = queryParams[2];
 
-      const customerData = await CustomerController.fetchCustomer(customerId);
+      const customerData = await CustomerController.fetchCustomer(email);
 
       return ResponseHandler.success(customerData, res);
     } catch (error) {
@@ -102,13 +102,12 @@ class CustomerController {
    * @returns {object} - Response object
    */
   static async updateCustomerAddressDetails(req, res) {
-    const { customerDetails: customerAddressDetails } = req;
+    const { customerDetails: customerAddressDetails, email } = req;
     const queryParams = Object.values(customerAddressDetails);
     try {
       await dbQuery('CALL customer_update_address(?, ?, ?, ?, ?, ?, ?, ?)', queryParams);
-      const customerId = queryParams[0];
 
-      const customerData = await CustomerController.fetchCustomer(customerId);
+      const customerData = await CustomerController.fetchCustomer(email);
 
       return ResponseHandler.success(customerData, res);
     } catch (error) {
@@ -124,18 +123,45 @@ class CustomerController {
    * @returns {object} - Response object
    */
   static async updateCustomerCreditCardDetails(req, res) {
-    const { customerDetails: customerCreditCardDetails } = req;
+    const { customerDetails: customerCreditCardDetails, email } = req;
     const queryParams = Object.values(customerCreditCardDetails);
     try {
       await dbQuery('CALL customer_update_credit_card(?, ?)', queryParams);
-      const customerId = queryParams[0];
 
-      const customerData = await CustomerController.fetchCustomer(customerId);
+      const customerData = await CustomerController.fetchCustomer(email);
 
       return ResponseHandler.success(customerData, res);
     } catch (error) {
       return ResponseHandler.serverError(res);
     }
+  }
+
+  /**
+   * @method socialLogin
+   * @description Controller to handle social login
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   * @returns {object} - Response object
+   */
+  static async socialLogin(req, res) {
+    const baseUrl = 'https://graph.facebook.com/v3.0/me?fields=name,email&access_token=';
+    const { access_token: facebookAccessToken } = req.body;
+    const userDetailsRequest = await get(`${baseUrl}${facebookAccessToken}`);
+    const { email, name } = userDetailsRequest.data;
+
+    const emailIsUnique = await ValidateCustomer.emailIsUnique(email);
+
+    if (emailIsUnique) {
+      try {
+        await dbQuery('INSERT INTO customer(name, email) VALUES(?, ?)', [name, email]);
+      } catch (error) {
+        ResponseHandler.serverError(res);
+      }
+    }
+    const customerData = await CustomerController.fetchCustomer(email);
+    const { customer_id: userId } = customerData;
+    const accessToken = HelperUtils.generateToken({ userId, name, email });
+    ResponseHandler.success({ customer: customerData, accessToken, expires_in: '24h' }, res);
   }
 
   /**
@@ -158,15 +184,19 @@ class CustomerController {
   /**
    * @method fetchCustomer
    * @description Method to get customer details from the database
-   * @param {object} customerId - The customer id
+   * @param {object} email - The customer id
    * @returns {object} - Response object
    */
-  static async fetchCustomer(customerId) {
-    const customerDetails = await dbQuery('CALL customer_get_customer(?)', customerId);
-    const customerData = customerDetails[0][0];
-    delete customerData.password;
+  static async fetchCustomer(email) {
+    try {
+      const customerDetails = await dbQuery('SELECT * FROM customer WHERE email = ?', email);
+      const customerData = customerDetails[0];
+      delete customerData.password;
 
-    return customerData;
+      return customerData;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 }
 

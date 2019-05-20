@@ -67,7 +67,7 @@ class ValidateCustomer {
         const hashedPassword = customerDetails[0][0].password;
         const passwordIsCorrect = HelperUtils.verifyPassword(password, hashedPassword);
         if (passwordIsCorrect) {
-          req.userId = customerDetails[0][0].customer_id;
+          req.email = email;
           return next();
         }
         return ResponseHandler.badRequest({
@@ -149,6 +149,7 @@ class ValidateCustomer {
 
     const { body, customerData } = req;
     const {
+      email,
       customer_id: customerId,
       address_1: address1,
       address_2: address2,
@@ -172,6 +173,7 @@ class ValidateCustomer {
 
     const updatedCustomerDetails = Object.assign(customerAddressData, body);
     req.customerDetails = updatedCustomerDetails;
+    req.email = email;
     return next();
   }
 
@@ -191,8 +193,9 @@ class ValidateCustomer {
     }
 
     const { body, customerData } = req;
-    const { customer_id: customerId } = customerData;
+    const { customer_id: customerId, email } = customerData;
     req.customerDetails = { customerId, creditCard: body.credit_card };
+    req.email = email;
     return next();
   }
 
@@ -204,8 +207,8 @@ class ValidateCustomer {
    */
   static async emailIsUnique(email) {
     try {
-      const emailQuery = await dbQuery('CALL customer_get_login_info(?)', email);
-      return emailQuery[0].length === 0;
+      const getUniqueUser = await dbQuery('CALL customer_get_login_info(?)', email);
+      return getUniqueUser[0].length === 0;
     } catch (error) {
       throw new Error(error);
     }
