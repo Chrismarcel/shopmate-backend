@@ -68,6 +68,12 @@ const Validators = {
       .withMessage('Order Id should be a number.')
   ],
 
+  validateAccessToken: () => [
+    param('access_token')
+      .exists()
+      .withMessage('required')
+  ],
+
   validateOrderFields: () => [
     body('cart_id')
       .exists()
