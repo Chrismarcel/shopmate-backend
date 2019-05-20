@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 let customerToken;
 
 describe('Test get orders endpoint GET /orders/:order_id', () => {
-  beforeEach((done) => {
+  before((done) => {
     chai
       .request(app)
       .post('/customers/login')
@@ -70,8 +70,8 @@ describe('Test get orders endpoint GET /orders/:order_id', () => {
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
-        expect(error.code).to.equal('ORD_01');
-        expect(error.message).to.equal('The ID is not a number.');
+        expect(error.code).to.equal('ORD_02');
+        expect(error.message).to.equal('Order Id should be a number.');
         expect(error.field).to.equal('order_id');
         done(err);
       });

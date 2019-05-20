@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 let customerToken;
 
 describe('Test post reviews endpoint POST /products/:product_id/reviews', () => {
-  beforeEach((done) => {
+  before((done) => {
     chai
       .request(app)
       .post('/customers/login')
@@ -74,8 +74,8 @@ describe('Test post reviews endpoint POST /products/:product_id/reviews', () => 
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
-        expect(error.code).to.equal('PRD_03');
-        expect(error.message).to.equal('The field review is empty');
+        expect(error.code).to.equal('PRD_01');
+        expect(error.message).to.equal('The field(s) is/are required.');
         expect(error.field).to.equal('review');
         done(err);
       });
@@ -90,14 +90,14 @@ describe('Test post reviews endpoint POST /products/:product_id/reviews', () => 
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
-        expect(error.code).to.equal('PRD_04');
+        expect(error.code).to.equal('PRD_02');
         expect(error.message).to.equal('Field is invalid, should be integer between 1 to 5');
         expect(error.field).to.equal('rating');
         done(err);
       });
   });
 
-  it('should return 400 if rating is not a number', (done) => {
+  it('should return 400 if rating is not specified', (done) => {
     chai
       .request(app)
       .post('/products/1/reviews')
@@ -106,8 +106,8 @@ describe('Test post reviews endpoint POST /products/:product_id/reviews', () => 
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
-        expect(error.code).to.equal('PRD_04');
-        expect(error.message).to.equal('The field rating is empty');
+        expect(error.code).to.equal('PRD_01');
+        expect(error.message).to.equal('The field(s) is/are required.');
         expect(error.field).to.equal('rating');
         done(err);
       });

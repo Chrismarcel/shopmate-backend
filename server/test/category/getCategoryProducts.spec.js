@@ -27,7 +27,7 @@ describe('Test get products in a category endpoint GET /categories/inProduct/:pr
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
-        expect(error.code).to.equal('PRD_01');
+        expect(error.code).to.equal('PRD_02');
         expect(error.field).to.equal('product_id');
         expect(error.message).to.equal('The ID is not a number.');
         done(err);

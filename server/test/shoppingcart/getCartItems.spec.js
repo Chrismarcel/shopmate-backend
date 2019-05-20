@@ -5,23 +5,11 @@ import app from '../../app';
 
 chai.use(chaiHttp);
 
-describe('generate unique id', () => {
-  it('should generate a unique string', (done) => {
-    chai
-      .request(app)
-      .get('/shoppingcart/generateUniqueId')
-      .end((err, res) => {
-        expect(res.body.cart_id.length).to.equal(32);
-        done(err);
-      });
-  });
-});
-
 describe('Test get cart items endpoint GET /shoppingcart/:cart_id', () => {
   it('should return 200 if items were returned successfully', (done) => {
     chai
       .request(app)
-      .get('/shoppingcart/bc0c9e95f33f402bd51db6caacec22de')
+      .get(`/shoppingcart/${global.cartId}`)
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body[0]).to.have.property('name');
@@ -56,7 +44,7 @@ describe('Test get cart items endpoint GET /shoppingcart/:cart_id', () => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
         expect(error.code).to.equal('CRT_01');
-        expect(error.message).to.equal('The field cart_id is empty.');
+        expect(error.message).to.equal('The field(s) is/are required.');
         expect(error.field).to.equal('cart_id');
         done(err);
       });

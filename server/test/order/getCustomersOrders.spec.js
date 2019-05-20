@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 let customerToken;
 
 describe('Test get customer orders endpoint GET /orders/inCustomer', () => {
-  beforeEach((done) => {
+  before((done) => {
     chai
       .request(app)
       .post('/customers/login')

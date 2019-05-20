@@ -18,7 +18,7 @@ class ValidateOrder {
    * @returns {object} - JSON response object
    */
   static async validateOrder(req, res, next) {
-    const { order_id: orderId } = req.params;
+    const { order_id: orderId } = req.params || req.body;
     const fields = validationResult(req).mapped();
     const errorObj = ValidateOrder.validateOrderFields(fields);
     if (Object.keys(errorObj).length) {
@@ -39,19 +39,12 @@ class ValidateOrder {
    * @returns {array | object} - Error object
    */
   static validateOrderFields(fields) {
-    const genericErrors = FieldValidation.validateField(fields, 'ORD_01');
+    const requiredFieldsErrors = FieldValidation.validateRequiredFields(fields, 'ORD_01');
+    const genericErrors = FieldValidation.validateField(fields, 'ORD_02');
 
-    if (genericErrors) {
-      if (genericErrors.message === 'empty') {
-        genericErrors.message = `The field ${genericErrors.field} is empty`;
-        genericErrors.code = 'ORD_02';
-        genericErrors.field = genericErrors.field;
-      }
-      if (genericErrors.field === 'shipping_id' || genericErrors.field === 'tax_id') {
-        genericErrors.code = 'ORD_03';
-        genericErrors.field = genericErrors.field;
-      }
-      return genericErrors;
+    if (requiredFieldsErrors || genericErrors) {
+      const errorObj = requiredFieldsErrors || genericErrors;
+      return errorObj;
     }
 
     return [];

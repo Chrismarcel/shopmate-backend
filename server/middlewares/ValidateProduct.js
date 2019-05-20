@@ -33,7 +33,7 @@ class ValidateProduct {
         return next();
       }
       const error = {
-        code: 'PRD_02',
+        code: 'PRD_03',
         message: "Don't exist product with this ID.",
         field: 'product_id'
       };
@@ -49,20 +49,12 @@ class ValidateProduct {
    * @returns {array | object} - Error object
    */
   static validateProductFields(fields) {
-    const genericErrors = FieldValidation.validateField(fields, 'PRD_01');
+    const requiredFieldsErrors = FieldValidation.validateRequiredFields(fields, 'PRD_01');
+    const genericErrors = FieldValidation.validateField(fields, 'PRD_02');
 
-    if (genericErrors) {
-      if (genericErrors.message === 'empty') {
-        genericErrors.message = `The field ${genericErrors.field} is empty`;
-        genericErrors.code = 'PRD_03';
-        genericErrors.field = genericErrors.field;
-      }
-
-      if (genericErrors.field === 'rating') {
-        genericErrors.code = 'PRD_04';
-        genericErrors.field = genericErrors.field;
-      }
-      return genericErrors;
+    if (requiredFieldsErrors || genericErrors) {
+      const errorObj = requiredFieldsErrors || genericErrors;
+      return errorObj;
     }
 
     return [];

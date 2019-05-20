@@ -6,10 +6,11 @@ import app from '../../app';
 chai.use(chaiHttp);
 
 describe('Test empty cart endpoint DELETE /shoppingcart/:cart_id', () => {
+  // before();
   it('should return 200 if deletion was successfully', (done) => {
     chai
       .request(app)
-      .delete('/shoppingcart/bc0c9e95f33f402bd51db6caacec22de')
+      .delete(`/shoppingcart/${global.cartId}`)
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body).to.deep.equal([]);
@@ -39,7 +40,7 @@ describe('Test empty cart endpoint DELETE /shoppingcart/:cart_id', () => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
         expect(error.code).to.equal('CRT_01');
-        expect(error.message).to.equal('The field cart_id is empty.');
+        expect(error.message).to.equal('The field(s) is/are required.');
         expect(error.field).to.equal('cart_id');
         done(err);
       });

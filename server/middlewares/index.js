@@ -9,6 +9,7 @@ import ValidateShipping from './ValidateShipping';
 import ValidateProduct from './ValidateProduct';
 import ValidateOrder from './ValidateOrder';
 import ValidateShoppingCart from './ValidateShoppingCart';
+import ValidatePayment from './ValidatePayment';
 
 export {
   AuthenticateUser,
@@ -21,5 +22,6 @@ export {
   ValidateShipping,
   ValidateProduct,
   ValidateOrder,
-  ValidateShoppingCart
+  ValidateShoppingCart,
+  ValidatePayment
 };
