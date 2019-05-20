@@ -53,17 +53,12 @@ class ValidateShoppingCart {
    * @returns {array | object} - Error object
    */
   static validateShoppingCartFields(fields) {
-    const genericErrors = FieldValidation.validateField(fields, 'CRT_01');
-    const itemFields = ['item_id', 'quantity'];
-    if (genericErrors) {
-      if (itemFields.includes(genericErrors.field)) {
-        genericErrors.code = 'CRT_02';
-      }
+    const requiredFieldsErrors = FieldValidation.validateRequiredFields(fields, 'CRT_01');
+    const genericErrors = FieldValidation.validateField(fields, 'CRT_02');
 
-      if (genericErrors.message === 'empty') {
-        genericErrors.message = `The field ${genericErrors.field} is empty.`;
-      }
-      return genericErrors;
+    if (requiredFieldsErrors || genericErrors) {
+      const errorObj = requiredFieldsErrors || genericErrors;
+      return errorObj;
     }
 
     return [];

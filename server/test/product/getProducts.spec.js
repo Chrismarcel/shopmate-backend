@@ -72,7 +72,7 @@ describe('Test get a single products endpoint GET /products/:product_id', () => 
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
-        expect(error.code).to.equal('PRD_01');
+        expect(error.code).to.equal('PRD_02');
         expect(error.message).to.equal('The ID is not a number.');
         done(err);
       });
@@ -85,7 +85,7 @@ describe('Test get a single products endpoint GET /products/:product_id', () => 
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
-        expect(error.code).to.equal('PRD_02');
+        expect(error.code).to.equal('PRD_03');
         expect(error.message).to.equal("Don't exist product with this ID.");
         done(err);
       });

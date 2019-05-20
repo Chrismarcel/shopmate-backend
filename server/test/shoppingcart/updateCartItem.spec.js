@@ -41,8 +41,8 @@ describe('Test update cart item endpoint PUT /shoppingcart/update/item_id', () =
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
-        expect(error.code).to.equal('CRT_02');
-        expect(error.message).to.equal('The field item_id is empty.');
+        expect(error.code).to.equal('CRT_01');
+        expect(error.message).to.equal('The field(s) is/are required.');
         expect(error.field).to.equal('item_id');
         done(err);
       });
@@ -73,8 +73,8 @@ describe('Test update cart item endpoint PUT /shoppingcart/update/item_id', () =
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
-        expect(error.code).to.equal('CRT_02');
-        expect(error.message).to.equal('The field quantity is empty.');
+        expect(error.code).to.equal('CRT_01');
+        expect(error.message).to.equal('The field(s) is/are required.');
         expect(error.field).to.equal('quantity');
         done(err);
       });

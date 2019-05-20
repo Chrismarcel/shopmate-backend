@@ -9,17 +9,17 @@ orderRoute.get('/orders/inCustomer',
   AuthenticateUser.verifyUser,
   OrderController.getCustomerOrders);
 
-orderRoute.get('/orders/:order_id',
+orderRoute.get('/orders/shortDetails/:order_id?',
   AuthenticateUser.verifyUser,
-  Validator.validateId('order_id'),
-  ValidateOrder.validateOrder,
-  OrderController.getOrderWithId);
-
-orderRoute.get('/orders/shortDetails/:order_id',
-  AuthenticateUser.verifyUser,
-  Validator.validateId('order_id'),
+  Validator.validateOrderId(),
   ValidateOrder.validateOrder,
   OrderController.getOrderShortDetails);
+
+orderRoute.get('/orders/:order_id?',
+  AuthenticateUser.verifyUser,
+  Validator.validateOrderId(),
+  ValidateOrder.validateOrder,
+  OrderController.getOrderWithId);
 
 orderRoute.post('/orders',
   AuthenticateUser.verifyUser,

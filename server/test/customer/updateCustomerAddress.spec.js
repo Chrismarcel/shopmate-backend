@@ -18,7 +18,7 @@ const requestBody = {
 };
 
 describe('Test update customer address endpoint PUT /customers/address', () => {
-  beforeEach((done) => {
+  before((done) => {
     chai
       .request(app)
       .post('/customers/login')

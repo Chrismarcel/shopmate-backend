@@ -9,6 +9,7 @@ import shippingDetailsRoute from './shipping';
 import productRoute from './product';
 import orderRoute from './order';
 import shoppingCartRoute from './shoppingcart';
+import paymentRoute from './payment';
 
 const router = express.Router();
 
@@ -21,5 +22,6 @@ router.use(shippingDetailsRoute);
 router.use(productRoute);
 router.use(orderRoute);
 router.use(shoppingCartRoute);
+router.use(paymentRoute);
 
 export default router;

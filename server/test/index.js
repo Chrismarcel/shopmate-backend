@@ -6,5 +6,6 @@ import './category';
 import './attribute';
 import './shipping';
 import './product';
-import './order';
 import './shoppingcart';
+import './order';
+import './payment';

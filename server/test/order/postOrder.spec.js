@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 let customerToken;
 
 describe('Test post orders endpoint POST /orders', () => {
-  beforeEach((done) => {
+  before((done) => {
     chai
       .request(app)
       .post('/customers/login')
@@ -56,7 +56,7 @@ describe('Test post orders endpoint POST /orders', () => {
       .request(app)
       .post('/orders')
       .set('user-key', customerToken)
-      .send({ shipping_id: 1, tax_id: '1', cart_id: 1 })
+      .send({ shipping_id: 1, tax_id: '1', cart_id: global.cartId })
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body).to.have.property('orderId');
@@ -73,8 +73,8 @@ describe('Test post orders endpoint POST /orders', () => {
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
-        expect(error.code).to.equal('ORD_03');
-        expect(error.message).to.equal('The field shipping_id is empty');
+        expect(error.code).to.equal('ORD_01');
+        expect(error.message).to.equal('The field(s) is/are required.');
         expect(error.field).to.equal('shipping_id');
         done(err);
       });
@@ -89,8 +89,8 @@ describe('Test post orders endpoint POST /orders', () => {
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
-        expect(error.code).to.equal('ORD_02');
-        expect(error.message).to.equal('The field cart_id is empty');
+        expect(error.code).to.equal('ORD_01');
+        expect(error.message).to.equal('The field(s) is/are required.');
         expect(error.field).to.equal('cart_id');
         done(err);
       });
@@ -105,8 +105,8 @@ describe('Test post orders endpoint POST /orders', () => {
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
-        expect(error.code).to.equal('ORD_03');
-        expect(error.message).to.equal('The field tax_id is empty');
+        expect(error.code).to.equal('ORD_01');
+        expect(error.message).to.equal('The field(s) is/are required.');
         expect(error.field).to.equal('tax_id');
         done(err);
       });
@@ -121,7 +121,7 @@ describe('Test post orders endpoint POST /orders', () => {
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
-        expect(error.code).to.equal('ORD_03');
+        expect(error.code).to.equal('ORD_02');
         expect(error.message).to.equal('Shipping ID should be a number');
         expect(error.field).to.equal('shipping_id');
         done(err);
@@ -137,7 +137,7 @@ describe('Test post orders endpoint POST /orders', () => {
       .end((err, res) => {
         const { error } = res.body;
         expect(res.status).to.equal(400);
-        expect(error.code).to.equal('ORD_03');
+        expect(error.code).to.equal('ORD_02');
         expect(error.message).to.equal('Tax ID should be a number');
         expect(error.field).to.equal('tax_id');
         done(err);

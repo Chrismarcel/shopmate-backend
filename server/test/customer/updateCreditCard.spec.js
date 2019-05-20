@@ -8,11 +8,11 @@ chai.use(chaiHttp);
 let customerToken;
 
 const requestBody = {
-  credit_card: '4056 4041 0042 2814'
+  credit_card: process.env.CC_ID
 };
 
 describe('Test update customer credit card endpoint PUT /customers/creditCard', () => {
-  beforeEach((done) => {
+  before((done) => {
     chai
       .request(app)
       .post('/customers/login')
