@@ -17,7 +17,7 @@ app.use(cors());
 app.use(logger('dev'));
 
 // Parse incoming requests data
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Setup a generic welcome message for the '/' route
 app.get('/', (req, res) => res.status(200).send({
