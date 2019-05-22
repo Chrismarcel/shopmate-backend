@@ -59,7 +59,7 @@ describe('Test post orders endpoint POST /orders', () => {
       .send({ shipping_id: 1, tax_id: '1', cart_id: global.cartId })
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body).to.have.property('orderId');
+        expect(res.body).to.have.property('order_id');
         done(err);
       });
   });
