@@ -69,7 +69,7 @@ const Validators = {
   ],
 
   validateAccessToken: () => [
-    param('access_token')
+    body('access_token')
       .exists()
       .withMessage('required')
   ],

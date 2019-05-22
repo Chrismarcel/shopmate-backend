@@ -160,7 +160,7 @@ class CustomerController {
     }
     const customerData = await CustomerController.fetchCustomer(email);
     const { customer_id: userId } = customerData;
-    const accessToken = HelperUtils.generateToken({ userId, name, email });
+    const accessToken = `Bearer ${HelperUtils.generateToken({ userId, name, email })}`;
     ResponseHandler.success({ customer: customerData, accessToken, expires_in: '24h' }, res);
   }
 

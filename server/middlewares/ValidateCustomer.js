@@ -61,6 +61,10 @@ class ValidateCustomer {
       return ResponseHandler.badRequest(errorObj, res);
     }
 
+    if (req.body.access_token) {
+      return next();
+    }
+
     try {
       const customerDetails = await dbQuery('CALL customer_get_login_info(?)', email);
       if (customerDetails[0].length > 0) {
