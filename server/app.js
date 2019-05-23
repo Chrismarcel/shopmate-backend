@@ -17,6 +17,7 @@ app.use(cors());
 app.use(logger('dev'));
 
 // Parse incoming requests data
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Setup a generic welcome message for the '/' route
